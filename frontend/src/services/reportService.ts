@@ -1,11 +1,13 @@
+'use client'
+
 import { TransactionService } from '@/services/transactionService'
 import { TransactionStatus } from '@/types/models'
 
-export const ReportService = () => {
-  const transactionService = TransactionService()
+export class ReportService {
+  private transactionService = new TransactionService()
 
-  const saldoGeral = () => {
-    const transactions = transactionService.list()
+  saldoGeral() {
+    const transactions = this.transactionService.list()
 
     let totalReceber = 0
     let totalPagar = 0
@@ -20,9 +22,11 @@ export const ReportService = () => {
     return { totalReceber, totalPagar, transactionsCount: transactions.length }
   }
 
-  const concluded = () => transactionService.list().filter(transaction => transaction.status === 'QUITADA')
+  concluded() {
+    return this.transactionService.list().filter(transaction => transaction.status === 'QUITADA')
+  }
 
-  const overdue = () => transactionService.list().filter(transaction => transaction.status === 'ATRASADA')
-
-  return { saldoGeral, concluded, overdue }
+  overdue() {
+    return this.transactionService.list().filter(transaction => transaction.status === 'ATRASADA')
+  }
 }

@@ -1,4 +1,5 @@
 'use client'
+
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { decodeToken, generateToken, validateToken } from '@/lib/jwt'
 import { UserService } from '@/services/userService'
@@ -13,8 +14,8 @@ interface AuthContextType {
   logout: () => void
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null)
-const userService = UserService()
+export const AuthContext = createContext<AuthContextType>(null!)
+const userService = new UserService()
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useLocalStorage('token')
