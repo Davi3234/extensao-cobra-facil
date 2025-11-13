@@ -1,11 +1,13 @@
-import { useMockApi } from '@/hooks/useMockApi'
+'use client'
+
+import { MockApi } from '@/lib/MockApi'
 import { Transaction, TransactionStatus } from '@/types/models'
 
-export const TransactionService = () => {
-  const api = useMockApi<Transaction>('transactions')
+export class TransactionService {
+  private api = new MockApi<Transaction>('transactions')
 
-  const list = (): Transaction[] => {
-    return api.list().map(transaction => {
+  list() {
+    return this.api.list().map(transaction => {
       if (transaction.status !== TransactionStatus.QUITADA) {
         const now = new Date()
         const due = new Date(transaction.dueDate)
@@ -19,13 +21,19 @@ export const TransactionService = () => {
     })
   }
 
-  const find = (id: number) => api.find(id)
+  find(id: number) {
+    return this.api.find(id)
+  }
 
-  const create = (payload: Omit<Transaction, 'id'>) => api.create(payload as any)
+  create(payload: Omit<Transaction, 'id'>) {
+    return this.api.create(payload as any)
+  }
 
-  const update = (id: number, payload: Partial<Transaction>) => api.update(id, payload)
+  update(id: number, payload: Partial<Transaction>) {
+    return this.api.update(id, payload)
+  }
 
-  const remove = (id: number) => api.remove(id)
-
-  return { list, find, create, update, remove }
+  remove(id: number) {
+    return this.api.remove(id)
+  }
 }
