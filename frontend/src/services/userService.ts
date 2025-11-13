@@ -1,8 +1,12 @@
 import { useMockApi } from '@/hooks/useMockApi'
 import { User } from '@/types/models'
 
+const mockUsers: User[] = [
+  { id: 1, name: 'Admin', email: 'admin@mail.com', password: '1234', phone: '999999999' },
+]
+
 export const UserService = () => {
-  const api = useMockApi<User>('users')
+  const api = useMockApi<User>('users', mockUsers)
 
   const list = (): User[] => api.list()
 
