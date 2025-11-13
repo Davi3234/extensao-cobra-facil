@@ -13,3 +13,13 @@ export const validateToken = (token: string) => {
     return false
   }
 }
+
+export const decodeToken = (token: string) => {
+  try {
+    const payload = JSON.parse(atob(token))
+
+    return payload
+  } catch {
+    return null
+  }
+}
