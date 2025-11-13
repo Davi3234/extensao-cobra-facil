@@ -1,22 +1,32 @@
-import { useMockApi } from '@/hooks/useMockApi'
+'use client'
+
+import { MockApi } from '@/lib/MockApi'
 import { User } from '@/types/models'
 
 const mockUsers: User[] = [
   { id: 1, name: 'Admin', email: 'admin@mail.com', password: '1234', phone: '999999999' },
 ]
 
-export const UserService = () => {
-  const api = useMockApi<User>('users', mockUsers)
+export class UserService {
+  private api = new MockApi<User>('users', mockUsers)
 
-  const list = (): User[] => api.list()
+  list() {
+    return this.api.list()
+  }
 
-  const find = (id: number) => api.find(id)
+  find(id: number) {
+    return this.api.find(id)
+  }
 
-  const create = (payload: Omit<User, 'id'>) => api.create(payload as any)
+  create(payload: Omit<User, 'id'>) {
+    return this.api.create(payload as any)
+  }
 
-  const update = (id: number, payload: Partial<User>) => api.update(id, payload)
+  update(id: number, payload: Partial<User>) {
+    return this.api.update(id, payload)
+  }
 
-  const remove = (id: number) => api.remove(id)
-
-  return { list, find, create, update, remove }
+  remove(id: number) {
+    return this.api.remove(id)
+  }
 }
