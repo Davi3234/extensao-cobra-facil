@@ -1,14 +1,20 @@
-import { useMockApi } from '@/hooks/useMockApi'
+'use client'
+
+import { MockApi } from '@/lib/MockApi'
 import { NotificationTransaction } from '@/types/models'
 
-export const NotificationService = () => {
-  const api = useMockApi<NotificationTransaction>('notifications')
+export class NotificationService {
+  private api = new MockApi<NotificationTransaction>('notifications')
 
-  const list = () => api.list()
+  list() {
+    return this.api.list()
+  }
 
-  const create = (payload: Omit<NotificationTransaction, 'id' | 'sentAt'>) => api.create({ ...payload, sentAt: new Date().toISOString() } as any)
+  create(payload: Omit<NotificationTransaction, 'id' | 'sentAt'>) {
+    return this.api.create({ ...payload, sentAt: new Date().toISOString() } as any)
+  }
 
-  const remove = (id: number) => api.remove(id)
-
-  return { list, create, remove }
+  remove(id: number) {
+    return this.api.remove(id)
+  }
 }
