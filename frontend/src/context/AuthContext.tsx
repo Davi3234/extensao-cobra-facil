@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setToken(token)
     setUser(user)
 
-    // router.push('/dashboard')
+    router.push('/dashboard')
   }
 
   const registerUser = (form: Omit<User, 'id'>) => {
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     alert('Usuário cadastrado com sucesso!')
 
-    // router.push('/login')
+    router.push('/login')
   }
 
   const logout = () => {
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     setUser(null)
 
-    // router.push('/login')
+    router.push('/login')
   }
 
   useEffect(() => {
