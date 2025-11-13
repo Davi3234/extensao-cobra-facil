@@ -1,8 +1,8 @@
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useCallback } from 'react'
 
-export const useMockApi = <T extends object = any>(key: string) => {
-  const [storage, setStorage] = useLocalStorage<T[]>(key)
+export const useMockApi = <T extends object = any>(key: string, initialValues?: T[]) => {
+  const [storage, setStorage] = useLocalStorage<T[]>(key, initialValues)
 
   const create = useCallback((data: T) => {
     const id = Date.now()

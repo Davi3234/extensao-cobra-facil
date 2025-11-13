@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 
-export function useLocalStorage<T = any>(key: string, defaultValue?: T) {
+export function useLocalStorage<T = any>(key: string, initialValue?: T) {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = localStorage.getItem(key)
 
-      return item ? JSON.parse(item) : defaultValue as T
+      return item ? JSON.parse(item) : initialValue as T
     } catch (error) {
       console.warn(`Erro ao ler a chave "${key}" do localStorage:`, error)
 
-      return defaultValue
+      return initialValue
     }
   })
 
