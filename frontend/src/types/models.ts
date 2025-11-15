@@ -1,32 +1,33 @@
-export type User = {
+export type Usuario = {
   id: number
-  name: string
+  nome: string
   email: string
-  phone?: string
-  password?: string
+  telefone?: string
+  senha?: string
+  ativo: number
 }
 
-export enum TransactionStatus {
-  PENDENTE = 'PENDENTE',
-  QUITADA = 'QUITADA',
-  ATRASADA = 'ATRASADA'
+export enum TransacaoStatus {
+  PENDENTE = 1,
+  QUITADA = 2,
+  ATRASADA = 3,
 }
 
-export type Transaction = {
+export type Transacao = {
   id: number
-  value: number
-  description?: string
-  dueDate: string // ISO
-  paymentDate?: string | null // ISO
+  valor: number
+  descricao?: string
+  dataVencimento: string // ISO
+  dataPagamento?: string | null // ISO
   creditorId: number
   debtorId: number
-  status: TransactionStatus
+  status: TransacaoStatus
 }
 
-export type NotificationTransaction = {
+export type NotificationTransacao = {
   id: number
-  transactionId: number
-  sentAt: string
-  toUserId: number
-  message: string
+  transacaoId: number
+  dataEnvio: string
+  toUsuarioId: number
+  mensagem: string
 }

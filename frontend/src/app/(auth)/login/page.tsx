@@ -8,16 +8,16 @@ import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 export default function LoginPage() {
-  const { user, login } = useAuth()
+  const { usuario, login } = useAuth()
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [senha, setSenha] = useState('')
 
   const onSubmit = () => {
-    login(email, password)
+    login(email, senha)
   }
 
   useEffect(() => {
-    if (user) {
+    if (usuario) {
       redirect('/dashboard')
     }
   }, [])
@@ -27,7 +27,7 @@ export default function LoginPage() {
       <h1 className="text-2xl font-bold text-center">Login</h1>
 
       <Input label="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <Input label="Senha" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input label="Senha" type="senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
 
       <Button type="button" onClick={onSubmit}>Entrar</Button>
 

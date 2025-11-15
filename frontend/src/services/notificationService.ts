@@ -1,17 +1,17 @@
 'use client'
 
 import { MockApi } from '@/lib/MockApi'
-import { NotificationTransaction } from '@/types/models'
+import { NotificationTransacao } from '@/types/models'
 
 export class NotificationService {
-  private api = new MockApi<NotificationTransaction>('notifications')
+  private api = new MockApi<NotificationTransacao>('notifications')
 
   async list() {
     return this.api.list()
   }
 
-  async create(payload: Omit<NotificationTransaction, 'id' | 'sentAt'>) {
-    return this.api.create({ ...payload, sentAt: new Date().toISOString() } as any)
+  async create(payload: Omit<NotificationTransacao, 'id' | 'dataEnvio'>) {
+    return this.api.create({ ...payload, dataEnvio: new Date().toISOString() } as any)
   }
 
   async remove(id: number) {

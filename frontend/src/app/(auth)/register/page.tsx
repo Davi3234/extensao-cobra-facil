@@ -7,21 +7,21 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 export default function RegisterPage() {
-  const { registerUser } = useAuth()
-  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' })
+  const { registerUsuario } = useAuth()
+  const [form, setForm] = useState({ nome: '', email: '', telefone: '', senha: '' })
 
   const onSubmit = () => {
-    registerUser(form)
+    registerUsuario(form)
   }
 
   return (
     <form className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold text-center">Cadastrar</h1>
 
-      <Input label="Nome" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+      <Input label="Nome" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
       <Input label="E-mail" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-      <Input label="Telefone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-      <Input label="Senha" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+      <Input label="Telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
+      <Input label="Senha" type="senha" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
 
       <Button type="button" onClick={onSubmit}>Cadastrar</Button>
 

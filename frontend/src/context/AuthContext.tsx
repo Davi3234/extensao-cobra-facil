@@ -2,43 +2,43 @@
 
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { decodeToken, generateToken, validateToken } from '@/lib/jwt'
-import { UserService } from '@/services/userService'
-import { User } from '@/types/models'
+import { UsuarioService } from '@/services/UsuarioService'
+import { Usuario } from '@/types/models'
 import { useRouter } from 'next/navigation'
 import { createContext, useEffect } from 'react'
 
 interface AuthContextType {
-  user: User | null
-  login: (email: string, password: string) => void
-  registerUser: (form: Omit<User, 'id'>) => void
+  usuario: Usuario | null
+  login: (email: string, senha: string) => Promise<void>
+  registerUsuario: (form: Omit<Usuario, 'id' | 'ativo'>) => void
   logout: () => void
 }
 
 export const AuthContext = createContext<AuthContextType>(null!)
-const userService = new UserService()
+const usuarioService = new UsuarioService()
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useLocalStorage('token')
-  const [user, setUser] = useLocalStorage('user')
+  const [usuario, setUsuario] = useLocalStorage('usuario')
   const router = useRouter()
 
-  const login = (email: string, password: string) => {
-    const user = userService.list().find((x) => x.email == email && x.password == password)
+  const login = async (email: string, senha: string) => {
+    const usuario = (await usuarioService.list()).find(usuario => usuario.email == email && usuario.senha == senha && usuario.ativo == 1)
 
-    if (!user) {
+    if (!usuario) {
       return alert('Usuário ou senha inválidos.')
     }
 
-    const token = generateToken({ id: user.id })
+    const token = generateToken({ id: usuario.id })
 
     setToken(token)
-    setUser(user)
+    setUsuario(usuario)
 
     router.push('/dashboard')
   }
 
-  const registerUser = (form: Omit<User, 'id'>) => {
-    userService.create(form)
+  const registerUsuario = (form: Omit<Usuario, 'id' | 'ativo'>) => {
+    usuarioService.create(form)
 
     alert('Usuário cadastrado com sucesso!')
 
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = () => {
     localStorage.clear()
 
-    setUser(null)
+    setUsuario(null)
 
     router.push('/login')
   }
@@ -64,17 +64,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const decoded = decodeToken(token)
 
-    const currentUser = userService.find(decoded.id)
+    const currentUsuario = usuarioService.find(decoded.id)
 
-    if (!currentUser) {
+    if (!currentUsuario) {
       return logout()
     }
 
-    setUser(currentUser)
+    setUsuario(currentUsuario)
   }, [token])
 
   return (
-    <AuthContext.Provider value={{ user, login, registerUser, logout }}>
+    <AuthContext.Provider value={{ usuario, login, registerUsuario, logout }}>
       {children}
     </AuthContext.Provider>
   )
