@@ -41,7 +41,7 @@ public class UsuarioEntidade {
         return senha;
     }
 
-    public int getAtivo(){
+    public int getAtivo() {
         return ativo;
     }
 
@@ -69,6 +69,7 @@ public class UsuarioEntidade {
         this.senha = senha;
         return this;
     }
+
     public UsuarioEntidade setAtivo(int ativo) {
         this.ativo = ativo;
         return this;
