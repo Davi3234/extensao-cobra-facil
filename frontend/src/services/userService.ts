@@ -10,23 +10,23 @@ const mockUsers: User[] = [
 export class UserService {
   private api = new MockApi<User>('users', mockUsers)
 
-  list() {
+  async list() {
     return this.api.list()
   }
 
-  find(id: number) {
+  async find(id: number) {
     return this.api.find(id)
   }
 
-  create(payload: Omit<User, 'id'>) {
+  async create(payload: Omit<User, 'id'>) {
     return this.api.create(payload as any)
   }
 
-  update(id: number, payload: Partial<User>) {
+  async update(id: number, payload: Partial<User>) {
     return this.api.update(id, payload)
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return this.api.remove(id)
   }
 }
