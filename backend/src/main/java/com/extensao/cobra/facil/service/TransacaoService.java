@@ -12,30 +12,20 @@ public class TransacaoService {
     @Autowired
     private TransacaoRepositorio transacaoRepositorio;
 
-    public TransacaoEntidade criar(TransacaoEntidade transacao) {
+    public TransacaoEntidade criarTransacao(TransacaoEntidade transacao) {
         return this.transacaoRepositorio.save(transacao);
     }
 
-    public TransacaoEntidade atualizar(Long id, TransacaoEntidade nova) {
-        TransacaoEntidade antiga = this.transacaoRepositorio.findById(id).get();
-
-        antiga.setValor(nova.getValor());
-        antiga.setDescricao(nova.getDescricao());
-        antiga.setDataVencimento(nova.getDataVencimento());
-        antiga.setContraparteId(nova.getContraparteId());
-        antiga.setStatus(nova.getStatus());
-
-        return this.transacaoRepositorio.save(antiga);
-    }
-
-    public void excluir(Long id) {
+    public void excluirTransacao(Long id) {
         this.transacaoRepositorio.deleteById(id);
     }
 
-    public TransacaoEntidade marcarComoQuitada(Long id) {
-        TransacaoEntidade tx = this.transacaoRepositorio.findById(id).get();
-        tx.setStatus(StatusTransacaoEnum.QUITADA.getValor());
-        tx.setDataPagamento(java.time.LocalDate.now());
-        return this.transacaoRepositorio.save(tx);
+    public TransacaoEntidade quitarTransacao(Long id) {
+        TransacaoEntidade transacaoEntidade = this.transacaoRepositorio.findById(id).get();
+        transacaoEntidade
+                .setStatus(StatusTransacaoEnum.QUITADA.getValor())
+                .setDataPagamento(java.time.LocalDate.now());
+
+        return this.transacaoRepositorio.save(transacaoEntidade);
     }
 }

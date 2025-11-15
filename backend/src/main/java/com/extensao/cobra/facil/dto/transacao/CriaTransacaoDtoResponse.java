@@ -8,6 +8,5 @@ public record CriaTransacaoDtoResponse(
         String descricao,
         LocalDate dataVencimento,
         LocalDate dataPagamento,
-        int status,
-        Long contraparteId) {
+        int status) {
 }

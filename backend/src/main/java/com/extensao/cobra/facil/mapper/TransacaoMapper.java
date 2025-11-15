@@ -10,7 +10,6 @@ public class TransacaoMapper {
         return new TransacaoEntidade()
                 .setValor(dto.valor())
                 .setDescricao(dto.descricao())
-                .setContraparteId(dto.contraparteId())
                 .setDataVencimento(dto.dataVencimento())
                 .setStatus(dto.status());
     }
@@ -22,7 +21,6 @@ public class TransacaoMapper {
                 tx.getDescricao(),
                 tx.getDataVencimento(),
                 tx.getDataPagamento(),
-                tx.getStatus(),
-                tx.getContraparteId());
+                tx.getStatus());
     }
 }

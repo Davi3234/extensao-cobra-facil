@@ -17,7 +17,6 @@ public class RelatorioService {
     @Autowired
     private TransacaoRepositorio transacaoRepositorio;
 
-    // SALDO GERAL
     public RelatorioSaldoDtoResponse calcularSaldo() {
 
         List<TransacaoEntidade> todas = transacaoRepositorio.findAll();
@@ -38,45 +37,41 @@ public class RelatorioService {
                 saldo);
     }
 
-    // QUITADAS
     public List<RelatorioTransacaoDtoResponse> transacoesQuitadas() {
         return transacaoRepositorio.findAll().stream()
-                .filter(tx -> tx.getStatus() == StatusTransacaoEnum.QUITADA.getValor())
+                .filter(transacaoEntidade -> transacaoEntidade.getStatus() == StatusTransacaoEnum.QUITADA.getValor())
                 .map(this::mapToDto)
                 .toList();
     }
 
-    // ATRASADAS
     public List<RelatorioTransacaoDtoResponse> transacoesAtrasadas() {
         LocalDate hoje = LocalDate.now();
 
         return transacaoRepositorio.findAll().stream()
-                .filter(tx -> tx.getStatus() == StatusTransacaoEnum.PENDENTE.getValor())
-                .filter(tx -> tx.getDataVencimento() != null && tx.getDataVencimento().isBefore(hoje))
+                .filter(transacaoEntidade -> transacaoEntidade.getStatus() == StatusTransacaoEnum.PENDENTE.getValor())
+                .filter(transacaoEntidade -> transacaoEntidade.getDataVencimento() != null && transacaoEntidade.getDataVencimento().isBefore(hoje))
                 .map(this::mapToDto)
                 .toList();
     }
 
-    // FILTROS
     public List<RelatorioTransacaoDtoResponse> filtrar(Integer status, LocalDate inicio, LocalDate fim) {
 
         return transacaoRepositorio.findAll().stream()
-                .filter(tx -> status == null || tx.getStatus() == status)
-                .filter(tx -> inicio == null || !tx.getDataVencimento().isBefore(inicio))
-                .filter(tx -> fim == null || !tx.getDataVencimento().isAfter(fim))
+                .filter(transacaoEntidade -> status == null || transacaoEntidade.getStatus() == status)
+                .filter(transacaoEntidade -> inicio == null || !transacaoEntidade.getDataVencimento().isBefore(inicio))
+                .filter(transacaoEntidade -> fim == null || !transacaoEntidade.getDataVencimento().isAfter(fim))
                 .map(this::mapToDto)
                 .toList();
     }
 
-    // MAPEAMENTO AUXILIAR
-    private RelatorioTransacaoDtoResponse mapToDto(TransacaoEntidade tx) {
+    private RelatorioTransacaoDtoResponse mapToDto(TransacaoEntidade transacaoEntidade) {
         return new RelatorioTransacaoDtoResponse(
-                tx.getId(),
-                tx.getValor(),
-                tx.getDescricao(),
-                tx.getDataVencimento(),
-                tx.getDataPagamento(),
-                tx.getStatus(),
-                tx.getContraparteId());
+                transacaoEntidade.getId(),
+                transacaoEntidade.getValor(),
+                transacaoEntidade.getDescricao(),
+                transacaoEntidade.getDataVencimento(),
+                transacaoEntidade.getDataPagamento(),
+                transacaoEntidade.getStatus(),
+                transacaoEntidade.getContraparteId());
     }
 }

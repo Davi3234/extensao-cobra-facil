@@ -26,8 +26,13 @@ public class TransacaoEntidade {
     @Column(name = "status_transacao")
     private int status;
 
-    @Column(name = "contraparte_transacao")
-    private Long contraparteId; // ID do usuário devedor/credor
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_devedor", referencedColumnName = "id_usuario")
+    private UsuarioEntidade usuarioDevedor;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_credor", referencedColumnName = "id_usuario")
+    private UsuarioEntidade usuarioCredor;
 
     public Long getId() {
         return id;
@@ -51,10 +56,6 @@ public class TransacaoEntidade {
 
     public int getStatus() {
         return status;
-    }
-
-    public Long getContraparteId() {
-        return contraparteId;
     }
 
     public TransacaoEntidade setId(Long id) {
@@ -87,8 +88,21 @@ public class TransacaoEntidade {
         return this;
     }
 
-    public TransacaoEntidade setContraparteId(Long contraparteId) {
-        this.contraparteId = contraparteId;
+    public UsuarioEntidade getUsuarioDevedor() {
+        return usuarioDevedor;
+    }
+
+    public TransacaoEntidade setUsuarioDevedor(UsuarioEntidade usuarioDevedor) {
+        this.usuarioDevedor = usuarioDevedor;
+        return this;
+    }
+
+    public UsuarioEntidade getUsuarioCredor() {
+        return usuarioCredor;
+    }
+
+    public TransacaoEntidade setUsuarioCredor(UsuarioEntidade usuarioCredor) {
+        this.usuarioCredor = usuarioCredor;
         return this;
     }
 }
