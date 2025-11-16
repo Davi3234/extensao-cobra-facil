@@ -1,19 +1,19 @@
 'use client'
 
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/button'
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { useAuth } from '@/hooks/useAuth'
+import { Label } from '@radix-ui/react-label'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 export default function LoginPage() {
   const { usuario, login } = useAuth()
-  const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
+  const [form, setForm] = useState({ email: '', senha: '' })
 
   const onSubmit = () => {
-    login(email, senha)
+    login(form.email, form.senha)
   }
 
   useEffect(() => {
@@ -26,8 +26,19 @@ export default function LoginPage() {
     <form className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold text-center">Login</h1>
 
-      <Input label="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <Input label="Senha" type="senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
+      <InputGroup>
+        <InputGroupInput id="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+        <InputGroupAddon align="block-start">
+          <Label htmlFor="email">E-mail</Label>
+        </InputGroupAddon>
+      </InputGroup>
+
+      <InputGroup>
+        <InputGroupInput id="senha" type="password" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
+        <InputGroupAddon align="block-start">
+          <Label htmlFor="senha">Senha</Label>
+        </InputGroupAddon>
+      </InputGroup>
 
       <Button type="button" onClick={onSubmit}>Entrar</Button>
 

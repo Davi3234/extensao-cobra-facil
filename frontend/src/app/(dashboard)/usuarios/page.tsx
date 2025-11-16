@@ -1,12 +1,18 @@
 'use client'
 
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Toolbar } from '@/components/ui/Toolbar'
+import { Button } from '@/components/ui/button'
 import { UsuarioService } from '@/services/UsuarioService'
 import { Usuario } from '@/types/models'
 import { Edit, Save, Trash, Users, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput
+} from '@/components/ui/input-group'
+import { Label } from '@/components/ui/label'
+import { Toolbar } from '@/components/ui/toolbar'
 
 const usuarioService = new UsuarioService()
 
@@ -77,11 +83,34 @@ export default function UsuariosPage() {
         <form onSubmit={editing ? onUpdate : onCreate} className="bg-white p-4 rounded shadow space-y-3">
           <h2 className="font-semibold">{editing ? 'Editar Usuário' : 'Novo Usuário'}</h2>
 
-          <Input label="Nome" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
-          <Input label="E-mail" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          <Input label="Telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
+          <InputGroup>
+            <InputGroupInput id="nome" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
+            <InputGroupAddon align="block-start">
+              <Label htmlFor="nome">Nome <span className='text-red-600'>*</span></Label>
+            </InputGroupAddon>
+          </InputGroup>
 
-          {!editing && <Input label="Senha" type="senha" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />}
+          <InputGroup>
+            <InputGroupInput id="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <InputGroupAddon align="block-start">
+              <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
+            </InputGroupAddon>
+          </InputGroup>
+
+          {!editing
+            && <InputGroup>
+              <InputGroupInput id="senha" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
+              <InputGroupAddon align="block-start">
+                <Label htmlFor="senha">Senha</Label>
+              </InputGroupAddon>
+            </InputGroup>}
+
+          <InputGroup>
+            <InputGroupInput id="telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
+            <InputGroupAddon align="block-start">
+              <Label htmlFor="telefone">Telefone</Label>
+            </InputGroupAddon>
+          </InputGroup>
 
           <Toolbar>
             {!editing
