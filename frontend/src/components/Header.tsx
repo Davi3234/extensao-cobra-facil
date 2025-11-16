@@ -1,6 +1,7 @@
 'use client'
 
 import { useAuth } from '@/hooks/useAuth'
+import { CircleUserRound, LogOut } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export const Header = () => {
@@ -23,12 +24,16 @@ export const Header = () => {
       </div>
 
       <div className="flex items-center gap-4">
+        <CircleUserRound />
+
         <div className="text-sm">
           <div>{usuario?.nome}</div>
           <div className="text-xs text-gray-500">{usuario?.email}</div>
         </div>
 
-        <button onClick={logout} className="text-sm text-red-600">Sair</button>
+        <button onClick={logout} className="text-sm text-red-600">
+          <LogOut color='#da3036' />
+        </button>
       </div>
     </header>
   )
