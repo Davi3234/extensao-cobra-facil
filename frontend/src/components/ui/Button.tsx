@@ -1,9 +1,11 @@
+import { Button as ButtonHeadless } from '@headlessui/react'
 import { ButtonHTMLAttributes } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
 
 export const Button = ({ children, ...props }: ButtonProps) => (
-  <button {...props} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition w-full">
+  <ButtonHeadless {...props} className={twMerge('rounded bg-sky-600 px-4 py-2 text-sm text-white data-active:bg-sky-700 data-hover:bg-sky-500', props.className)}>
     {children}
-  </button>
+  </ButtonHeadless>
 )
