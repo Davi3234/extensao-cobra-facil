@@ -64,13 +64,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const decoded = decodeToken(token)
 
-    const currentUsuario = usuarioService.find(decoded.id)
+    usuarioService.find(decoded.id).then(usuario => {
+      if (!usuario) {
+        return logout()
+      }
 
-    if (!currentUsuario) {
-      return logout()
-    }
-
-    setUsuario(currentUsuario)
+      setUsuario(usuario)
+    })
   }, [token])
 
   return (
