@@ -1,15 +1,16 @@
 package com.extensao.cobra.facil.service;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.extensao.cobra.facil.dto.relatorio.RelatorioSaldoDtoResponse;
 import com.extensao.cobra.facil.dto.relatorio.RelatorioTransacaoDtoResponse;
 import com.extensao.cobra.facil.entity.TransacaoEntidade;
 import com.extensao.cobra.facil.enums.StatusTransacaoEnum;
 import com.extensao.cobra.facil.repository.TransacaoRepositorio;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class RelatorioService {
@@ -23,7 +24,7 @@ public class RelatorioService {
 
         double totalPagar = todas.stream()
                 .filter(t -> t.getValor() != null)
-                .filter(t -> t.getContraparteId() != null)
+                .filter(t -> t.getUsuarioDevedor() != null)
                 .mapToDouble(TransacaoEntidade::getValor)
                 .sum();
 
@@ -72,6 +73,6 @@ public class RelatorioService {
                 transacaoEntidade.getDataVencimento(),
                 transacaoEntidade.getDataPagamento(),
                 transacaoEntidade.getStatus(),
-                transacaoEntidade.getContraparteId());
+                transacaoEntidade.getUsuarioDevedor().getId());
     }
 }
