@@ -2,8 +2,10 @@
 
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { Toolbar } from '@/components/ui/Toolbar'
 import { UsuarioService } from '@/services/UsuarioService'
 import { Usuario } from '@/types/models'
+import { Edit, Save, Trash, Users, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const usuarioService = new UsuarioService()
@@ -32,9 +34,9 @@ export default function UsuariosPage() {
     refresh()
   }
 
-  const onEdit = (u: Usuario) => {
-    setEditing(u)
-    setForm({ nome: u.nome, email: u.email, telefone: u.telefone || '', senha: u.senha || '' })
+  const onEdit = (usuario: Usuario) => {
+    setEditing(usuario)
+    setForm({ nome: usuario.nome, email: usuario.email, telefone: usuario.telefone || '', senha: usuario.senha || '' })
   }
 
   const onUpdate = (e: React.FormEvent) => {
@@ -56,14 +58,20 @@ export default function UsuariosPage() {
       return
     }
 
-    usuarioService.remove(id)
+    usuarioService.remove(id).then(() => refresh())
+  }
 
-    refresh()
+  const clearForm = () => {
+    setEditing(null)
+    setForm({ nome: '', email: '', telefone: '', senha: '' })
   }
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-4">Usuários</h1>
+      <div className='flex gap-2'>
+        <Users />
+        <h1 className="text-xl font-bold mb-4">Usuários</h1>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <form onSubmit={editing ? onUpdate : onCreate} className="bg-white p-4 rounded shadow space-y-3">
@@ -75,9 +83,17 @@ export default function UsuariosPage() {
 
           {!editing && <Input label="Senha" type="senha" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />}
 
-          <Button type="submit">{editing ? 'Atualizar' : 'Criar'}</Button>
-
-          {editing && <Button type="button" onClick={() => { setEditing(null); setForm({ nome: '', email: '', telefone: '', senha: '' }) }}>Cancelar</Button>}
+          <Toolbar>
+            {!editing
+              ? <Button type="submit" className='flex gap-2 items-center'><Save size={22} /> Criar</Button>
+              : (
+                <>
+                  <Button type="submit" className='flex gap-2 items-center'><Save size={22} /> Atualizar</Button>
+                  <Button type="button" onClick={clearForm} className='flex gap-2 items-center bg-red-700'><X size={22} /> Cancelar</Button>
+                </>
+              )
+            }
+          </Toolbar>
         </form>
 
         <div className="bg-white p-4 rounded shadow">
@@ -85,16 +101,20 @@ export default function UsuariosPage() {
 
           <div className="space-y-2">
             {list.map(usuario => (
-              <div key={usuario.id} className="flex items-center justify-between p-2 border rounded">
-                <div>
-                  <div className="font-medium">{usuario.nome}</div>
-                  <div className="text-xs text-gray-500">{usuario.email} • {usuario.telefone}</div>
+              <div key={usuario.id}>
+                <div className="flex items-center justify-between p-2">
+                  <div>
+                    <div className="font-medium">{usuario.nome}</div>
+                    <div className="text-xs text-gray-500">{usuario.email} • {usuario.telefone}</div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button onClick={() => onEdit(usuario)} className="text-blue-600 text-sm"><Edit /></button>
+                    <button onClick={() => onDelete(usuario.id)} className="text-red-600 text-sm"><Trash /></button>
+                  </div>
                 </div>
 
-                <div className="flex gap-2">
-                  <button onClick={() => onEdit(usuario)} className="text-blue-600 text-sm">Editar</button>
-                  <button onClick={() => onDelete(usuario.id)} className="text-red-600 text-sm">Remover</button>
-                </div>
+                <hr className="my-2 border-t border-gray-300 w-full mx-auto" />
               </div>
             ))}
 
