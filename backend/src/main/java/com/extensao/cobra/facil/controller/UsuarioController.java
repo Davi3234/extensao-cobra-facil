@@ -8,6 +8,9 @@ import com.extensao.cobra.facil.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/usuarios")
@@ -31,4 +34,10 @@ public class UsuarioController {
     public void inativar(@PathVariable Long id){
         this.usuarioService.inativarUsuario(id);
     }
+
+    @GetMapping()
+    public String getMethodName() {
+        return "Hello World!";
+    }
+    
 }
