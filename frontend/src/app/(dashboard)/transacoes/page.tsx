@@ -37,6 +37,7 @@ export default function TransacoesPage() {
 
   const onCreate = (e: React.FormEvent) => {
     e.preventDefault()
+
     const val = parseFloat(form.valor)
 
     if (!val || !form.dataVencimento || !form.creditorId || !form.debtorId) {

@@ -5,18 +5,20 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/in
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 export default function RegisterPage() {
   const { registerUsuario } = useAuth()
   const [form, setForm] = useState({ nome: '', email: '', telefone: '', senha: '' })
 
-  const onSubmit = () => {
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault()
+
     registerUsuario(form)
   }
 
   return (
-    <form className="flex flex-col gap-4">
+    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
       <h1 className="text-2xl font-bold text-center">Cadastrar</h1>
 
       <InputGroup>
@@ -47,7 +49,7 @@ export default function RegisterPage() {
         </InputGroupAddon>
       </InputGroup>
 
-      <Button type="button" onClick={onSubmit}>Cadastrar</Button>
+      <Button type="submit">Cadastrar</Button>
 
       <p className="text-sm text-center">
         Já tem conta? <Link href="/login" className="text-blue-600">Entre</Link>

@@ -1,11 +1,6 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { UsuarioService } from '@/services/UsuarioService'
-import { Usuario } from '@/types/models'
-import { Edit, Save, Trash, Users, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
-
 import {
   InputGroup,
   InputGroupAddon,
@@ -13,6 +8,10 @@ import {
 } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
 import { Toolbar } from '@/components/ui/toolbar'
+import { UsuarioService } from '@/services/UsuarioService'
+import { Usuario } from '@/types/models'
+import { Edit, Save, Trash, Users, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 const usuarioService = new UsuarioService()
 
@@ -21,11 +20,7 @@ export default function UsuariosPage() {
   const [editing, setEditing] = useState<Usuario | null>(null)
   const [form, setForm] = useState({ nome: '', email: '', telefone: '', senha: '' })
 
-  useEffect(() => {
-    usuarioService.list().then(usuarios => setList(usuarios))
-  }, [])
-
-  const refresh = () => usuarioService.list().then(usuarios => setList(usuarios))
+  const refresh = () => usuarioService.list().then(usuarios => setList(() => usuarios))
 
   const onCreate = (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,9 +30,10 @@ export default function UsuariosPage() {
     }
 
     usuarioService.create({ nome: form.nome, email: form.email, telefone: form.telefone, senha: form.senha })
-
-    setForm({ nome: '', email: '', telefone: '', senha: '' })
-    refresh()
+      .then(() => {
+        setForm({ nome: '', email: '', telefone: '', senha: '' })
+        refresh()
+      })
   }
 
   const onEdit = (usuario: Usuario) => {
@@ -52,11 +48,11 @@ export default function UsuariosPage() {
       return
     }
 
-    usuarioService.update(editing.id, { nome: form.nome, email: form.email, telefone: form.telefone })
-
-    setEditing(null)
-    setForm({ nome: '', email: '', telefone: '', senha: '' })
-    refresh()
+    usuarioService.update(editing.id, { nome: form.nome, email: form.email, telefone: form.telefone }).then(() => {
+      setEditing(null)
+      setForm({ nome: '', email: '', telefone: '', senha: '' })
+      refresh()
+    })
   }
 
   const onDelete = (id: number) => {
@@ -64,13 +60,18 @@ export default function UsuariosPage() {
       return
     }
 
-    usuarioService.remove(id).then(() => refresh())
+    usuarioService.remove(id)
+      .then(() => refresh())
   }
 
   const clearForm = () => {
     setEditing(null)
     setForm({ nome: '', email: '', telefone: '', senha: '' })
   }
+
+  useEffect(() => {
+    refresh()
+  }, [])
 
   return (
     <div>
@@ -84,14 +85,14 @@ export default function UsuariosPage() {
           <h2 className="font-semibold">{editing ? 'Editar Usuário' : 'Novo Usuário'}</h2>
 
           <InputGroup>
-            <InputGroupInput id="nome" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
+            <InputGroupInput type="text" id="nome" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
             <InputGroupAddon align="block-start">
               <Label htmlFor="nome">Nome <span className='text-red-600'>*</span></Label>
             </InputGroupAddon>
           </InputGroup>
 
           <InputGroup>
-            <InputGroupInput id="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <InputGroupInput type="text" id="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             <InputGroupAddon align="block-start">
               <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
             </InputGroupAddon>
@@ -99,14 +100,14 @@ export default function UsuariosPage() {
 
           {!editing
             && <InputGroup>
-              <InputGroupInput id="senha" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
+              <InputGroupInput type="password" id="senha" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
               <InputGroupAddon align="block-start">
                 <Label htmlFor="senha">Senha</Label>
               </InputGroupAddon>
             </InputGroup>}
 
           <InputGroup>
-            <InputGroupInput id="telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
+            <InputGroupInput type="tel" id="telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
             <InputGroupAddon align="block-start">
               <Label htmlFor="telefone">Telefone</Label>
             </InputGroupAddon>

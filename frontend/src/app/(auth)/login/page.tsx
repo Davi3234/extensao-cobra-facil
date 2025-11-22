@@ -6,13 +6,15 @@ import { useAuth } from '@/hooks/useAuth'
 import { Label } from '@radix-ui/react-label'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 
 export default function LoginPage() {
   const { usuario, login } = useAuth()
   const [form, setForm] = useState({ email: '', senha: '' })
 
-  const onSubmit = () => {
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault()
+
     login(form.email, form.senha)
   }
 
@@ -23,7 +25,7 @@ export default function LoginPage() {
   }, [])
 
   return (
-    <form className="flex flex-col gap-4">
+    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
       <h1 className="text-2xl font-bold text-center">Login</h1>
 
       <InputGroup>
@@ -40,7 +42,7 @@ export default function LoginPage() {
         </InputGroupAddon>
       </InputGroup>
 
-      <Button type="button" onClick={onSubmit}>Entrar</Button>
+      <Button type="submit">Entrar</Button>
 
       <p className="text-sm text-center">
         Não tem conta? <Link href="/register" className="text-blue-600">Cadastre-se</Link>
