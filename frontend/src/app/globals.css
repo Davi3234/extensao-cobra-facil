@@ -48,7 +48,7 @@ html {}
 
 body * {
   transition: .2s ease;
-  transition-property: color, width, height, background-color;
+  transition-property: color, width, height, background-color, outline, border, border-color, outline-color;
 }
 
 button,
