@@ -1,18 +1,17 @@
 'use client'
 
-import CadastroUsuario from '@/components/usuario/cadastro-usuario'
+import { Edit, Trash, Users } from 'lucide-react'
+import { useState } from 'react'
+
+import { CadastroUsuario } from '@/components/usuario/cadastro-usuario'
+import { ListUsuario } from '@/components/usuario/list-usuario'
 import { UsuarioService } from '@/services/UsuarioService'
 import { Usuario } from '@/types/models'
-import { Edit, Trash, Users } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 const usuarioService = new UsuarioService()
 
 export default function UsuariosPage() {
-  const [list, setList] = useState<Usuario[]>([])
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | undefined>()
-
-  const refresh = () => usuarioService.list().then(usuarios => setList(() => usuarios))
 
   const onEdit = (usuario: Usuario) => {
     setUsuarioSelecionado(usuario)
@@ -24,12 +23,7 @@ export default function UsuariosPage() {
     }
 
     usuarioService.remove(id)
-      .then(() => refresh())
   }
-
-  useEffect(() => {
-    refresh()
-  }, [])
 
   return (
     <div>
@@ -45,25 +39,25 @@ export default function UsuariosPage() {
           <h2 className="font-semibold mb-2">Lista</h2>
 
           <div className="space-y-2">
-            {list.map(usuario => (
-              <div key={usuario.id}>
-                <div className="flex items-center justify-between p-2">
-                  <div>
-                    <div className="font-medium">{usuario.nome}</div>
-                    <div className="text-xs text-gray-500">{usuario.email} • {usuario.telefone}</div>
+            <ListUsuario
+              item={usuario => (
+                <div key={usuario.id}>
+                  <div className="flex items-center justify-between p-2">
+                    <div>
+                      <div className="font-medium">{usuario.nome}</div>
+                      <div className="text-xs text-gray-500">{usuario.email} • {usuario.telefone}</div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button onClick={() => onEdit(usuario)} className="text-blue-600 text-sm"><Edit /></button>
+                      <button onClick={() => onDelete(usuario.id)} className="text-red-600 text-sm"><Trash /></button>
+                    </div>
                   </div>
 
-                  <div className="flex gap-2">
-                    <button onClick={() => onEdit(usuario)} className="text-blue-600 text-sm"><Edit /></button>
-                    <button onClick={() => onDelete(usuario.id)} className="text-red-600 text-sm"><Trash /></button>
-                  </div>
+                  <hr className="my-2 border-t border-gray-300 w-full mx-auto" />
                 </div>
-
-                <hr className="my-2 border-t border-gray-300 w-full mx-auto" />
-              </div>
-            ))}
-
-            {list.length === 0 && <div className="text-sm text-gray-500">Nenhum usuário cadastrado.</div>}
+              )}
+            />
           </div>
         </div>
       </div>
