@@ -12,9 +12,9 @@ import {
 } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
 import { Toolbar } from '@/components/ui/toolbar'
+import { registrarUsuarioAction } from '@/lib/actions/usuario'
 import { RegistrarUsuarioData, registrarUsuarioSchema } from '@/lib/schemas/usuario'
 import { Usuario } from '@/types/models'
-import { registrarUsuarioAction } from '../../lib/actions/usuario'
 
 export type CadastroUsuarioPageProps = {
   usuario?: Usuario
