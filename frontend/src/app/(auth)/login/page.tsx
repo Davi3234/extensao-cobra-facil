@@ -10,10 +10,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { InputGroup } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
-import { loginAction } from '@/lib/actions/auth'
+import { useAuth } from '@/hooks/useAuth'
 import { LoginUsuarioData, loginUsuarioSchema } from '@/lib/schemas/usuario'
 
 export default function LoginPage() {
+  const { login } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginUsuarioData>({
     resolver: zodResolver(loginUsuarioSchema),
     mode: 'onTouched',
@@ -21,7 +22,7 @@ export default function LoginPage() {
   })
 
   const onSubmit = (data: LoginUsuarioData) => {
-    loginAction(data)
+    login(data)
   }
 
   return (
