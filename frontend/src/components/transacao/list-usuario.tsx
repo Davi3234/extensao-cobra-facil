@@ -1,27 +1,15 @@
-'use client'
+import { ReactNode } from 'react'
 
-import { ReactNode, useEffect, useState } from 'react'
-
-import { TransacaoService } from '@/services/TransacaoService'
+import { buscarTransacoesAction } from '@/lib/actions/transaction'
 import { Transacao } from '@/types/models'
-
-const transacaoService = new TransacaoService()
 
 export type ListTransacaoProps = {
   transacao?: Transacao
   item?: (transacao: Transacao) => ReactNode
 }
 
-export default function ListTransacao({ transacao: transacaoSelecionada, item }: ListTransacaoProps) {
-  const [transacoes, setTransacoes] = useState<Transacao[]>([])
-
-  const refresh = () => {
-    transacaoService.list().then(transacoes => setTransacoes(transacoes))
-  }
-
-  useEffect(() => {
-    refresh()
-  }, [])
+export default async function ListTransacao({ transacao: transacaoSelecionada, item }: ListTransacaoProps) {
+  const transacoes = (await buscarTransacoesAction()).value || []
 
   return (
     <>

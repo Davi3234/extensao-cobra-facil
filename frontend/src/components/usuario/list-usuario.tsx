@@ -1,23 +1,15 @@
-'use client'
+import { ReactNode } from 'react'
 
-import { ReactNode, useEffect, useState } from 'react'
-
-import { UsuarioService } from '@/services/UsuarioService'
+import { buscarUsuariosAction } from '@/lib/actions/usuario'
 import { Usuario } from '@/types/models'
-
-const usuarioService = new UsuarioService()
 
 export type ListUsuarioProps = {
   usuario?: Usuario
   item?: (usuario: Usuario) => ReactNode
 }
 
-export function ListUsuario({ usuario: usuarioSelected, item }: ListUsuarioProps) {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([])
-
-  useEffect(() => {
-    usuarioService.list().then(usuarios => setUsuarios(usuarios))
-  }, [])
+export async function ListUsuario({ usuario: usuarioSelected, item }: ListUsuarioProps) {
+  const usuarios = (await buscarUsuariosAction()).value || []
 
   return (
     <>

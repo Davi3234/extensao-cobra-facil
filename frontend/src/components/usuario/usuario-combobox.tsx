@@ -1,5 +1,8 @@
 'use client'
 
+import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
+import { ComponentProps, useEffect, useId, useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -10,13 +13,9 @@ import {
   CommandList
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { UsuarioService } from '@/services/UsuarioService'
+import { buscarUsuariosAction } from '@/lib/actions/usuario'
+import { cn } from '@/lib/utils'
 import { Usuario } from '@/types/models'
-import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
-import { ComponentProps, useEffect, useId, useState } from 'react'
-import { cn } from '../../lib/utils'
-
-const usuarioService = new UsuarioService()
 
 export type UsuarioComboboxProps = {
   value?: string | number
@@ -29,7 +28,11 @@ export function UsuarioCombobox({ value, onChange, className, ...props }: Usuari
   const [open, setOpen] = useState(false)
 
   const refresh = () => {
-    usuarioService.list().then(usuarios => setUsuarios(usuarios))
+    buscarUsuariosAction().then(response => {
+      if (response.ok) {
+        setUsuarios(response.value)
+      }
+    })
   }
 
   useEffect(() => {

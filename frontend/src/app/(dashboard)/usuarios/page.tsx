@@ -5,24 +5,22 @@ import { useState } from 'react'
 
 import { CadastroUsuario } from '@/components/usuario/cadastro-usuario'
 import { ListUsuario } from '@/components/usuario/list-usuario'
-import { UsuarioService } from '@/services/UsuarioService'
+import { inativarUsuarioAction } from '@/lib/actions/usuario'
 import { Usuario } from '@/types/models'
-
-const usuarioService = new UsuarioService()
 
 export default function UsuariosPage() {
   const [usuarioSelecionado, setUsuarioSelecionado] = useState<Usuario | undefined>()
 
-  const onEdit = (usuario: Usuario) => {
+  const editar = (usuario: Usuario) => {
     setUsuarioSelecionado(usuario)
   }
 
-  const onDelete = (id: number) => {
+  const inativar = (id: number) => {
     if (!confirm('Remover usuário?')) {
       return
     }
 
-    usuarioService.remove(id)
+    inativarUsuarioAction(id)
   }
 
   return (
@@ -49,8 +47,8 @@ export default function UsuariosPage() {
                     </div>
 
                     <div className="flex gap-2">
-                      <button onClick={() => onEdit(usuario)} className="text-blue-600 text-sm"><Edit /></button>
-                      <button onClick={() => onDelete(usuario.id)} className="text-red-600 text-sm"><Trash /></button>
+                      <button onClick={() => editar(usuario)} className="text-blue-600 text-sm"><Edit /></button>
+                      <button onClick={() => inativar(usuario.id)} className="text-red-600 text-sm"><Trash /></button>
                     </div>
                   </div>
 

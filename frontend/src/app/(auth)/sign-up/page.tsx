@@ -14,13 +14,12 @@ import { useAuth } from '@/hooks/useAuth'
 import { RegistrarUsuarioData, registrarUsuarioSchema } from '@/lib/schemas/usuario'
 
 export default function RegisterPage() {
+  const { registerUsuario } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<RegistrarUsuarioData>({
     resolver: zodResolver(registrarUsuarioSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
     reValidateMode: 'onChange',
   })
-
-  const { registerUsuario } = useAuth()
 
   const onSubmit = (data: RegistrarUsuarioData) => {
     registerUsuario(data)
@@ -51,7 +50,6 @@ export default function RegisterPage() {
             <AlertDescription>{errors.email?.message}</AlertDescription>
           </Alert>}
       </InputGroup>
-
 
       <InputGroup>
         <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>

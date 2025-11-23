@@ -4,28 +4,26 @@ import { useState } from 'react'
 
 import CadastroTransacao from '@/components/transacao/cadastro-transacao'
 import ListTransacao from '@/components/transacao/list-usuario'
-import { TransacaoService } from '@/services/TransacaoService'
+import { excluirTransacaoAction, quitarTransacaoAction } from '@/lib/actions/transaction'
 import { Transacao, TransacaoStatus } from '@/types/models'
-
-const transacaoService = new TransacaoService()
 
 export default function TransacoesPage() {
   const [transacaoSelecionada, setTransacaoSelecionada] = useState<Transacao | undefined>()
 
-  const onEdit = (transacao: Transacao) => {
+  const editar = (transacao: Transacao) => {
     setTransacaoSelecionada(transacao)
   }
 
-  const onDelete = (id: number) => {
+  const excluir = (id: number) => {
     if (!confirm('Remover transação?')) {
       return
     }
 
-    transacaoService.remove(id)
+    excluirTransacaoAction(id)
   }
 
-  const markAsPaid = (t: Transacao) => {
-    transacaoService.update(t.id, { status: TransacaoStatus.QUITADA, dataPagamento: new Date().toISOString() })
+  const quitarTransacao = (id: number) => {
+    quitarTransacaoAction(id)
   }
 
   return (
@@ -48,9 +46,9 @@ export default function TransacoesPage() {
                   </div>
 
                   <div className="flex gap-2">
-                    {transacao.status !== TransacaoStatus.QUITADA && <button onClick={() => markAsPaid(transacao)} className="text-green-600 text-sm">Marcar Quitada</button>}
-                    <button onClick={() => onEdit(transacao)} className="text-blue-600 text-sm">Editar</button>
-                    <button onClick={() => onDelete(transacao.id)} className="text-red-600 text-sm">Remover</button>
+                    {transacao.status !== TransacaoStatus.QUITADA && <button onClick={() => quitarTransacao(transacao.id)} className="text-green-600 text-sm">Marcar Quitada</button>}
+                    <button onClick={() => editar(transacao)} className="text-blue-600 text-sm">Editar</button>
+                    <button onClick={() => excluir(transacao.id)} className="text-red-600 text-sm">Remover</button>
                   </div>
                 </div>
               )}

@@ -18,12 +18,10 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { Toolbar } from '@/components/ui/toolbar'
 import { UsuarioCombobox } from '@/components/usuario/usuario-combobox'
+import { cadastrarTransacaoAction } from '@/lib/actions/transaction'
 import { formatPtBR } from '@/lib/date'
 import { RegistrarTransacaoData, registrarTransacaoSchema } from '@/lib/schemas/transacao'
-import { TransacaoService } from '@/services/TransacaoService'
 import { Transacao } from '@/types/models'
-
-const transacaoService = new TransacaoService()
 
 export type CadastroTransacaoProps = {
   transacao?: Transacao
@@ -32,30 +30,32 @@ export type CadastroTransacaoProps = {
 export default function CadastroTransacao({ transacao }: CadastroTransacaoProps) {
   const { control, register, handleSubmit, getValues, formState: { errors }, reset } = useForm<RegistrarTransacaoData>({
     resolver: zodResolver(registrarTransacaoSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues: {
       valor: 0
     }
   })
 
-  const onCreate = (data: RegistrarTransacaoData) => {
-    transacaoService.create(data)
-      .then(() => {
-        reset()
+  const cadastrar = (data: RegistrarTransacaoData) => {
+    cadastrarTransacaoAction(data)
+      .then(result => {
+        if (result.ok) {
+          reset()
+        }
       })
   }
 
-  const onUpdate = (data: RegistrarTransacaoData) => {
+  const atualizar = (data: RegistrarTransacaoData) => {
     if (!transacao) {
       return
     }
 
-    transacaoService.update(transacao.id, data as any).then(() => reset())
+    // Atualizar
   }
 
   return (
-    <form onSubmit={handleSubmit(transacao ? onUpdate : onCreate)} className="flex flex-col gap-4 bg-white p-4 rounded shadow">
+    <form onSubmit={handleSubmit(transacao ? atualizar : cadastrar)} className="flex flex-col gap-4 bg-white p-4 rounded shadow">
       <h2 className="font-semibold">{transacao ? 'Editar Transação' : 'Nova Transação'}</h2>
 
       <InputGroup>

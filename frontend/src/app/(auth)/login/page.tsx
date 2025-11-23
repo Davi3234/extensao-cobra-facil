@@ -10,19 +10,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { InputGroup } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
-import { useAuth } from '@/hooks/useAuth'
+import { loginAction } from '@/lib/actions/auth'
 import { LoginUsuarioData, loginUsuarioSchema } from '@/lib/schemas/usuario'
 
 export default function LoginPage() {
-  const { login } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginUsuarioData>({
     resolver: zodResolver(loginUsuarioSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
     reValidateMode: 'onChange',
   })
 
   const onSubmit = (data: LoginUsuarioData) => {
-    login(data.email, data.senha)
+    loginAction(data)
   }
 
   return (
@@ -55,7 +54,7 @@ export default function LoginPage() {
       <Button type="submit">Entrar</Button>
 
       <p className="text-sm text-center">
-        Não tem conta? <Link href="/register" className="text-blue-600">Cadastre-se</Link>
+        Não tem conta? <Link href="/sign-up" className="text-blue-600">Cadastre-se</Link>
       </p>
     </form>
   )

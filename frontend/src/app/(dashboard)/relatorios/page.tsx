@@ -1,24 +1,16 @@
-'use client'
+import { calcularSaldoAction, contarTransacaoStatus } from '@/lib/actions/relatorio'
 
-import { RelatorioService } from '@/services/RelatorioService'
-import { useEffect, useState } from 'react'
+export default async function RelatoriosPage() {
+  const saldo = (await calcularSaldoAction()).value || {
+    totalReceber: 0,
+    totalPagar: 0,
+    saldoGeral: 0
+  }
 
-const relatorioService = new RelatorioService()
-
-export default function RelatoriosPage() {
-  const [estatisticas, setEstatisticas] = useState({
-    saldo: {
-      totalReceber: 0,
-      totalPagar: 0,
-      transacoesCount: 0,
-    },
+  const estatisticas = (await contarTransacaoStatus()).value || {
     quitadasCount: 0,
     atrasadasCount: 0,
-  })
-
-  useEffect(() => {
-    relatorioService.getEstatisticas().then(estatisticas => setEstatisticas(estatisticas))
-  }, [])
+  }
 
   return (
     <div>
@@ -27,7 +19,7 @@ export default function RelatoriosPage() {
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded shadow">
           <div className="text-sm text-gray-500">Saldo geral</div>
-          <div className="text-xl font-semibold">R$ {estatisticas.saldo.totalReceber.toFixed(2)} a receber<br />R$ {estatisticas.saldo.totalPagar.toFixed(2)} a pagar</div>
+          <div className="text-xl font-semibold">R$ {saldo.totalReceber.toFixed(2)} a receber<br />R$ {saldo.totalPagar.toFixed(2)} a pagar</div>
         </div>
 
         <div className="bg-white p-4 rounded shadow">

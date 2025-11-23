@@ -1,10 +1,7 @@
-'use client'
-
-import { RelatorioService } from '@/services/RelatorioService'
 import { ArrowRightLeft, ArrowUpFromLine } from 'lucide-react'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement } from 'react'
 
-const relatorioService = new RelatorioService()
+import { calcularSaldoAction } from '@/lib/actions/relatorio'
 
 function Card({ label, subtext, icon }: { label: string, subtext?: string, icon?: ReactElement }) {
   return <div className="bg-white p-4 rounded shadow flex">
@@ -17,16 +14,12 @@ function Card({ label, subtext, icon }: { label: string, subtext?: string, icon?
   </div>
 }
 
-export default function DashboardPage() {
-  const [estatisticas, setEstatisticas] = useState({
+export default async function DashboardPage() {
+  const saldo = (await calcularSaldoAction()).value || {
     totalReceber: 0,
     totalPagar: 0,
-    transacoesCount: 0,
-  })
-
-  useEffect(() => {
-    relatorioService.saldoGeral().then(estatisticas => setEstatisticas(estatisticas))
-  }, [])
+    saldoGeral: 0
+  }
 
   return (
     <div className="space-y-4">
@@ -35,19 +28,19 @@ export default function DashboardPage() {
       <div className="grid grid-cols-3 gap-4">
         <Card
           label='Total a Receber'
-          subtext={`R$ ${estatisticas.totalReceber.toFixed(2)}`}
+          subtext={`R$ ${saldo.totalReceber.toFixed(2)}`}
           icon={<ArrowUpFromLine color='#388e4a' size={32} className='my-auto' />}
         />
 
         <Card
           label='Total a Pagar'
-          subtext={`R$ ${estatisticas.totalPagar.toFixed(2)}`}
+          subtext={`R$ ${saldo.totalPagar.toFixed(2)}`}
           icon={<ArrowUpFromLine color='#da3036' size={32} className='my-auto' />}
         />
 
         <Card
-          label='Total a Receber'
-          subtext={`${estatisticas.transacoesCount}`}
+          label='Saldo Geral'
+          subtext={`${saldo.saldoGeral}`}
           icon={<ArrowRightLeft size={32} className='my-auto' />}
         />
       </div>

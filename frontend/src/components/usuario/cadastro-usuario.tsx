@@ -13,10 +13,8 @@ import {
 import { Label } from '@/components/ui/label'
 import { Toolbar } from '@/components/ui/toolbar'
 import { RegistrarUsuarioData, registrarUsuarioSchema } from '@/lib/schemas/usuario'
-import { UsuarioService } from '@/services/UsuarioService'
 import { Usuario } from '@/types/models'
-
-const usuarioService = new UsuarioService()
+import { registrarUsuarioAction } from '../../lib/actions/usuario'
 
 export type CadastroUsuarioPageProps = {
   usuario?: Usuario
@@ -25,29 +23,29 @@ export type CadastroUsuarioPageProps = {
 export function CadastroUsuario({ usuario }: CadastroUsuarioPageProps) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<RegistrarUsuarioData>({
     resolver: zodResolver(registrarUsuarioSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
     reValidateMode: 'onChange',
   })
 
-  const onCreate = (data: RegistrarUsuarioData) => {
-    usuarioService.create(data)
-      .then(() => {
-        reset()
+  const cadastrar = (data: RegistrarUsuarioData) => {
+    registrarUsuarioAction(data)
+      .then(response => {
+        if (response.ok) {
+          reset()
+        }
       })
   }
 
-  const onUpdate = (data: RegistrarUsuarioData) => {
+  const atualizar = (data: RegistrarUsuarioData) => {
     if (!usuario) {
       return
     }
 
-    usuarioService.update(usuario.id, data).then(() => {
-      reset()
-    })
+    // Atualizar
   }
 
   return (
-    <form onSubmit={handleSubmit(usuario ? onUpdate : onCreate)} className="flex flex-col gap-4 bg-white p-4 rounded shadow">
+    <form onSubmit={handleSubmit(usuario ? atualizar : cadastrar)} className="flex flex-col gap-4 bg-white p-4 rounded shadow">
       <h2 className="font-semibold">{usuario ? 'Editar Usuário' : 'Novo Usuário'}</h2>
 
       <InputGroup>
