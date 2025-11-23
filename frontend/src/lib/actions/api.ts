@@ -1,3 +1,5 @@
+'use server'
+
 import { API } from '@/util/api'
 import { env } from '@/util/env'
 
