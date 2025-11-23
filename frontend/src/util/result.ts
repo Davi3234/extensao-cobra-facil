@@ -4,21 +4,15 @@ export type IResult<T = any> = {
   error: string | null
 }
 
-export class Result<T> implements IResult<T> {
+export class Result {
 
-  readonly value: T
-  readonly error: string | null
-
-  constructor(readonly ok: boolean, response?: { value?: T, error?: string }) {
-    this.value = response?.value || null!
-    this.error = response?.error || null!
-  }
+  private constructor() { }
 
   static ok<T = any>(value: T) {
-    return new Result<T>(true, { value })
+    return { ok: true, value, error: null } as IResult<T>
   }
 
   static error<T = any>(error: string) {
-    return new Result<T>(false, { error })
+    return { ok: false, value: null, error: error } as IResult<T>
   }
 }
