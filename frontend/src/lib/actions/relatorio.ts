@@ -1,45 +1,34 @@
 'use server'
 
+import { api } from '@/lib/actions/api'
 import { Transacao } from '@/types/models'
-import { env } from '@/util/env'
-import { IResult, Result } from '@/util/result'
+import { Result } from '@/util/result'
 
-export async function calcularSaldoAction(): Promise<IResult<{
-  totalReceber: number
-  totalPagar: number
-  saldoGeral: number
-}>> {
-  try {
-    const response = await fetch(`${env('API_URL')}/relatorios/saldo`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      next: {
-        tags: ['relatorio']
-      }
-    }).then(r => r.json())
+export async function calcularSaldoAction() {
+  const response = await api.get<{
+    totalReceber: number
+    totalPagar: number
+    saldoGeral: number
+  }>('/relatorios/saldo', {
+    next: {
+      tags: ['relatorio']
+    }
+  })
 
-    return Result.ok(response)
-  } catch (error: any) {
-    return Result.error(error.message)
-  }
+  return response
 }
 
-export async function contarTransacaoStatus(): Promise<IResult<{
-  quitadasCount: number
-  atrasadasCount: number
-}>> {
+export async function contarTransacaoStatus() {
   const responseTransacaoQuitada = await buscarTransacoesQuitadasAction()
 
   if (!responseTransacaoQuitada.ok) {
-    return responseTransacaoQuitada as IResult<any>
+    return Result.fromResult<{ quitadasCount: number; atrasadasCount: number }>(responseTransacaoQuitada)
   }
 
   const responseTransacaoAtrasada = await buscarTransacoesAtrasadasAction()
 
   if (!responseTransacaoAtrasada.ok) {
-    return responseTransacaoAtrasada as IResult<any>
+    return Result.fromResult<{ quitadasCount: number; atrasadasCount: number }>(responseTransacaoAtrasada)
   }
 
   return Result.ok({
@@ -48,39 +37,22 @@ export async function contarTransacaoStatus(): Promise<IResult<{
   })
 }
 
+export async function buscarTransacoesQuitadasAction() {
+  const response = await api.get<Transacao[]>('/relatorios/quitadas', {
+    next: {
+      tags: ['relatorio']
+    }
+  })
 
-export async function buscarTransacoesQuitadasAction(): Promise<IResult<Transacao[]>> {
-  try {
-    const response = await fetch(`${env('API_URL')}/relatorios/quitadas`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      next: {
-        tags: ['relatorio']
-      }
-    }).then(r => r.json())
-
-    return Result.ok(response)
-  } catch (error: any) {
-    return Result.error(error.message)
-  }
+  return response
 }
 
-export async function buscarTransacoesAtrasadasAction(): Promise<IResult<Transacao[]>> {
-  try {
-    const response = await fetch(`${env('API_URL')}/relatorios/atrasadas`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      next: {
-        tags: ['relatorio']
-      }
-    }).then(r => r.json())
+export async function buscarTransacoesAtrasadasAction() {
+  const response = await api.get<Transacao[]>('/relatorios/atrasadas', {
+    next: {
+      tags: ['relatorio']
+    }
+  })
 
-    return Result.ok(response)
-  } catch (error: any) {
-    return Result.error(error.message)
-  }
+  return response
 }

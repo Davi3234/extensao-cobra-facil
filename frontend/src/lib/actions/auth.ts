@@ -2,40 +2,28 @@
 
 import { updateTag } from 'next/cache'
 
+import { api } from '@/lib/actions/api'
 import { LoginUsuarioData, RegistrarUsuarioData } from '@/lib/schemas/usuario'
-import { env } from '@/util/env'
-import { IResult, Result } from '@/util/result'
+import { Result } from '@/util/result'
 
-export async function loginAction(data: LoginUsuarioData): Promise<IResult<{ token: string }>> {
-  try {
-    const response = await fetch(`${env('API_URL')}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    }).then(r => r.json())
+export async function loginAction(data: LoginUsuarioData) {
+  const response = await api.post<{ token: string }>('/auth/login', {
+    body: data
+  })
 
-    return Result.ok({ token: response.token })
-  } catch (error: any) {
-    return Result.error(error.message)
-  }
+  return response
 }
 
-export async function signUpAction(data: RegistrarUsuarioData): Promise<IResult<boolean>> {
-  try {
-    await fetch(`${env('API_URL')}/auth/sign-up`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    })
+export async function signUpAction(data: RegistrarUsuarioData) {
+  const response = await api.post('/auth/sign-up', {
+    body: data
+  })
 
-    updateTag('usuarios')
-
-    return Result.ok(true)
-  } catch (error: any) {
-    return Result.error(error.message)
+  if (!response.ok) {
+    return Result.fromResult<boolean>(response)
   }
+
+  updateTag('usuarios')
+
+  return Result.ok(true)
 }

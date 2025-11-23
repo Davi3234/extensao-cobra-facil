@@ -1,53 +1,50 @@
 'use client'
 
 import { useLocalStorage } from '@/hooks/useLocalStorage'
-import { decodeToken, generateToken, validateToken } from '@/lib/jwt'
-import { UsuarioService } from '@/services/UsuarioService'
-import { Usuario } from '@/types/models'
 import { useRouter } from 'next/navigation'
 import { createContext, useEffect } from 'react'
 
+import { loginAction, signUpAction } from '@/lib/actions/auth'
+import { LoginUsuarioData, RegistrarUsuarioData } from '@/lib/schemas/usuario'
+import { Usuario } from '@/types/models'
+import { useNotification } from '../hooks/useNotification'
+
 interface AuthContextType {
   usuario: Usuario | null
-  login: (email: string, senha: string) => Promise<void>
-  registerUsuario: (form: Omit<Usuario, 'id' | 'ativo'>) => void
+  login: (data: LoginUsuarioData) => Promise<void>
+  registerUsuario: (form: RegistrarUsuarioData) => Promise<void>
   logout: () => void
 }
 
 export const AuthContext = createContext<AuthContextType>(null!)
-const usuarioService = new UsuarioService()
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useLocalStorage('token')
   const [usuario, setUsuario] = useLocalStorage('usuario')
   const router = useRouter()
+  const { notify } = useNotification()
 
-  const login = async (email: string, senha: string) => {
-    const usuario = (await usuarioService.list()).find(usuario => usuario.email == email && usuario.senha == senha && usuario.ativo == 1)
+  const login = async (data: LoginUsuarioData) => {
+    const response = await loginAction(data)
 
-    if (!usuario) {
-      return alert('Usuário ou senha inválidos.')
+    if (response.ok) {
+      router.push('/dashboard')
     }
-
-    const token = generateToken({ id: usuario.id })
-
-    setToken(token)
-    setUsuario(usuario)
-
-    router.push('/dashboard')
+    else {
+      notify({
+        message: response.error || 'Erro ao efetuar login',
+        type: 'error'
+      })
+    }
   }
 
-  const registerUsuario = (form: Omit<Usuario, 'id' | 'ativo'>) => {
-    usuarioService.create(form)
-
-    alert('Usuário cadastrado com sucesso!')
-
-    router.push('/login')
+  const registerUsuario = async (form: RegistrarUsuarioData) => {
+    await signUpAction(form).then(() => {
+      router.push('/login')
+    })
   }
 
   const logout = () => {
-    localStorage.clear()
-
     setUsuario(null)
 
     router.push('/login')
@@ -57,20 +54,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!token) {
       return logout()
     }
-
-    if (!validateToken(token)) {
-      return logout()
-    }
-
-    const decoded = decodeToken(token)
-
-    usuarioService.find(decoded.id).then(usuario => {
-      if (!usuario) {
-        return logout()
-      }
-
-      setUsuario(usuario)
-    })
   }, [token])
 
   return (

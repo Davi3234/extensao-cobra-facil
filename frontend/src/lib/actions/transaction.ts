@@ -2,95 +2,64 @@
 
 import { updateTag } from 'next/cache'
 
+import { api } from '@/lib/actions/api'
 import { RegistrarTransacaoData } from '@/lib/schemas/transacao'
 import { Transacao } from '@/types/models'
-import { env } from '@/util/env'
 import { IResult, Result } from '@/util/result'
 
 export async function buscarTransacoesAction(): Promise<IResult<Transacao[]>> {
-  try {
-    const response = await fetch(`${env('API_URL')}/transacoes`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      next: {
-        tags: ['transacoes']
-      }
-    }).then(r => r.json())
+  const response = await api.get<Transacao[]>('/transacoes', {
+    next: {
+      tags: ['transacoes']
+    }
+  })
 
-    return Result.ok(response)
-  } catch (error: any) {
-    return Result.error(error.message)
-  }
+  return response
 }
 
-export async function buscarTransacaoAction(id: number): Promise<IResult<Transacao>> {
-  try {
-    const response = await fetch(`${env('API_URL')}/transacoes/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(r => r.json())
+export async function buscarTransacaoAction(id: number) {
+  const response = await api.get<Transacao>(`/transacoes/${id}`)
 
-    return Result.ok(response)
-  } catch (error: any) {
-    return Result.error(error.message)
-  }
+  return response
 }
 
-export async function cadastrarTransacaoAction(data: RegistrarTransacaoData): Promise<IResult<boolean>> {
-  try {
-    await fetch(`${env('API_URL')}/transacoes`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    }).then(r => r.json())
+export async function cadastrarTransacaoAction(data: RegistrarTransacaoData) {
+  const response = await api.post('/transacoes', {
+    body: data
+  })
 
-    updateTag('transacoes')
-    updateTag('relatorio')
-
-    return Result.ok(true)
-  } catch (error: any) {
-    return Result.error(error.message)
+  if (!response.ok) {
+    return Result.fromResult<boolean>(response)
   }
+
+  updateTag('transacoes')
+  updateTag('relatorio')
+
+  return Result.ok(true)
 }
 
-export async function quitarTransacaoAction(id: number): Promise<IResult<boolean>> {
-  try {
-    await fetch(`${env('API_URL')}/transacoes/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(r => r.json())
+export async function quitarTransacaoAction(id: number) {
+  const response = await api.put(`/transacoes/quitar/${id}`)
 
-    updateTag('transacoes')
-    updateTag('relatorio')
-
-    return Result.ok(true)
-  } catch (error: any) {
-    return Result.error(error.message)
+  if (!response.ok) {
+    return Result.fromResult<boolean>(response)
   }
+
+  updateTag('transacoes')
+  updateTag('relatorio')
+
+  return Result.ok(true)
 }
 
-export async function excluirTransacaoAction(id: number): Promise<IResult<boolean>> {
-  try {
-    await fetch(`${env('API_URL')}/transacoes/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(r => r.json())
+export async function excluirTransacaoAction(id: number) {
+  const response = await api.put(`/transacoes/${id}`)
 
-    updateTag('transacoes')
-    updateTag('relatorio')
-
-    return Result.ok(true)
-  } catch (error: any) {
-    return Result.error(error.message)
+  if (!response.ok) {
+    return Result.fromResult<boolean>(response)
   }
+
+  updateTag('transacoes')
+  updateTag('relatorio')
+
+  return Result.ok(true)
 }
