@@ -4,12 +4,16 @@ import com.extensao.cobra.facil.entity.UsuarioEntidade;
 import com.extensao.cobra.facil.enums.UsuarioEnum;
 import com.extensao.cobra.facil.repository.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioService {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
+    @Autowired
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UsuarioService setUsuarioRepositorio(UsuarioRepositorio usuarioRepositorio) {
         this.usuarioRepositorio = usuarioRepositorio;
@@ -17,6 +21,8 @@ public class UsuarioService {
     }
 
     public UsuarioEntidade criarUsuario(UsuarioEntidade usuarioEntidade) {
+        usuarioEntidade.setSenha(this.passwordEncoder.encode(usuarioEntidade.getSenha()));
+        usuarioEntidade.setAtivo(1);
         return this.usuarioRepositorio.save(usuarioEntidade);
     }
 
