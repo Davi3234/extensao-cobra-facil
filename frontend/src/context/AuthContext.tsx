@@ -4,10 +4,10 @@ import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useRouter } from 'next/navigation'
 import { createContext, useEffect } from 'react'
 
+import { useNotification } from '@/hooks/useNotification'
 import { loginAction, signUpAction } from '@/lib/actions/auth'
 import { LoginUsuarioData, RegistrarUsuarioData } from '@/lib/schemas/usuario'
 import { Usuario } from '@/types/models'
-import { useNotification } from '../hooks/useNotification'
 
 interface AuthContextType {
   usuario: Usuario | null
