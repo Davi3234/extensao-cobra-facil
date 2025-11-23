@@ -1,46 +1,55 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Label } from '@radix-ui/react-label'
+import { AlertOctagon } from 'lucide-react'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
-import { useAuth } from '@/hooks/useAuth'
-import { Label } from '@radix-ui/react-label'
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { LoginUsuarioData, loginUsuarioSchema } from '@/lib/schemas/usuario'
 
 export default function LoginPage() {
-  const { usuario, login } = useAuth()
-  const [form, setForm] = useState({ email: '', senha: '' })
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginUsuarioData>({
+    resolver: zodResolver(loginUsuarioSchema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  })
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault()
-
-    login(form.email, form.senha)
+  const onSubmit = (data: LoginUsuarioData) => {
   }
 
-  useEffect(() => {
-    if (usuario) {
-      redirect('/dashboard')
-    }
-  }, [])
-
   return (
-    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-2xl font-bold text-center">Login</h1>
 
       <InputGroup>
-        <InputGroupInput id="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+        <InputGroupInput {...register('email')} type="text" id="email" />
         <InputGroupAddon align="block-start">
-          <Label htmlFor="email">E-mail</Label>
+          <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
         </InputGroupAddon>
       </InputGroup>
 
+      {errors.email
+        && <Alert variant="field-error">
+          <AlertOctagon />
+          <AlertDescription>{errors.email?.message}</AlertDescription>
+        </Alert>}
+
       <InputGroup>
-        <InputGroupInput id="senha" type="password" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
+        <InputGroupInput {...register('senha')} type="password" id="senha" />
         <InputGroupAddon align="block-start">
-          <Label htmlFor="senha">Senha</Label>
+          <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>
         </InputGroupAddon>
       </InputGroup>
+
+      {errors.senha
+        && <Alert variant="field-error">
+          <AlertOctagon />
+          <AlertDescription>{errors.senha?.message}</AlertDescription>
+        </Alert>}
 
       <Button type="submit">Entrar</Button>
 

@@ -1,51 +1,77 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { AlertOctagon } from 'lucide-react'
+import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/useAuth'
-import Link from 'next/link'
-import { FormEvent, useState } from 'react'
+import { RegistrarUsuarioData, registrarUsuarioSchema } from '@/lib/schemas/usuario'
 
 export default function RegisterPage() {
+  const { register, handleSubmit, formState: { errors } } = useForm<RegistrarUsuarioData>({
+    resolver: zodResolver(registrarUsuarioSchema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  })
+
   const { registerUsuario } = useAuth()
-  const [form, setForm] = useState({ nome: '', email: '', telefone: '', senha: '' })
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault()
-
-    registerUsuario(form)
+  const onSubmit = (data: RegistrarUsuarioData) => {
+    registerUsuario(data)
   }
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <h1 className="text-2xl font-bold text-center">Cadastrar</h1>
 
       <InputGroup>
-        <InputGroupInput id="nome" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
+        <InputGroupInput {...register('nome')} type="text" id="nome" />
         <InputGroupAddon align="block-start">
-          <Label htmlFor="nome">Nome</Label>
+          <Label htmlFor="nome">Nome <span className='text-red-600'>*</span></Label>
         </InputGroupAddon>
       </InputGroup>
 
+      {errors.nome
+        && <Alert variant="field-error">
+          <AlertOctagon />
+          <AlertDescription>{errors.nome?.message}</AlertDescription>
+        </Alert>}
+
       <InputGroup>
-        <InputGroupInput id="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+        <InputGroupInput {...register('email')} type="text" id="email" />
         <InputGroupAddon align="block-start">
-          <Label htmlFor="email">E-mail</Label>
+          <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
         </InputGroupAddon>
       </InputGroup>
 
+      {errors.email
+        && <Alert variant="field-error">
+          <AlertOctagon />
+          <AlertDescription>{errors.email?.message}</AlertDescription>
+        </Alert>}
+
       <InputGroup>
-        <InputGroupInput id="telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
+        <InputGroupInput {...register('senha')} type="password" id="senha" />
         <InputGroupAddon align="block-start">
-          <Label htmlFor="telefone">E-mail</Label>
+          <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>
         </InputGroupAddon>
       </InputGroup>
 
+      {errors.senha
+        && <Alert variant="field-error">
+          <AlertOctagon />
+          <AlertDescription>{errors.senha?.message}</AlertDescription>
+        </Alert>}
+
       <InputGroup>
-        <InputGroupInput id="senha" type="password" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
+        <InputGroupInput {...register('telefone')} type="tel" id="telefone" />
         <InputGroupAddon align="block-start">
-          <Label htmlFor="senha">Senha</Label>
+          <Label htmlFor="telefone">Telefone</Label>
         </InputGroupAddon>
       </InputGroup>
 
