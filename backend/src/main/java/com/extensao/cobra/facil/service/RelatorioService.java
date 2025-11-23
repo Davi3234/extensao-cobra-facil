@@ -50,7 +50,8 @@ public class RelatorioService {
 
         return transacaoRepositorio.findAll().stream()
                 .filter(transacaoEntidade -> transacaoEntidade.getStatus() == StatusTransacaoEnum.PENDENTE.getValor())
-                .filter(transacaoEntidade -> transacaoEntidade.getDataVencimento() != null && transacaoEntidade.getDataVencimento().isBefore(hoje))
+                .filter(transacaoEntidade -> transacaoEntidade.getDataVencimento() != null
+                        && transacaoEntidade.getDataVencimento().isBefore(hoje))
                 .map(this::mapToDto)
                 .toList();
     }
@@ -73,6 +74,7 @@ public class RelatorioService {
                 transacaoEntidade.getDataVencimento(),
                 transacaoEntidade.getDataPagamento(),
                 transacaoEntidade.getStatus(),
-                transacaoEntidade.getUsuarioDevedor().getId());
+                transacaoEntidade.getUsuarioDevedor().getId(),
+                transacaoEntidade.getUsuarioCredor().getId());
     }
 }
