@@ -9,22 +9,21 @@ import {
   CommandItem,
   CommandList
 } from '@/components/ui/command'
-import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { UsuarioService } from '@/services/UsuarioService'
 import { Usuario } from '@/types/models'
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
-import { ReactNode, useEffect, useId, useState } from 'react'
+import { ComponentProps, useEffect, useId, useState } from 'react'
+import { cn } from '../../lib/utils'
 
 const usuarioService = new UsuarioService()
 
 export type UsuarioComboboxProps = {
-  label?: ReactNode
   value?: string | number
   onChange?: (value: string | number) => void
-}
+} & ComponentProps<'div'>
 
-export function UsuarioCombobox({ label, value, onChange }: UsuarioComboboxProps) {
+export function UsuarioCombobox({ value, onChange, className, ...props }: UsuarioComboboxProps) {
   const id = useId()
   const [usuarios, setUsuarios] = useState<Usuario[]>([])
   const [open, setOpen] = useState(false)
@@ -40,8 +39,7 @@ export function UsuarioCombobox({ label, value, onChange }: UsuarioComboboxProps
   const usuarioSelecionado = usuarios.find(usuario => usuario.nome === value)
 
   return (
-    <div className='w-full max-w-xs space-y-2'>
-      <Label htmlFor={id}>{label}</Label>
+    <div className={cn('w-full max-w-xs space-y-2', className)} {...props}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button id={id} variant='outline' role='combobox' aria-expanded={open} className='w-full justify-between'>

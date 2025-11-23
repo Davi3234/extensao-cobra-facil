@@ -7,7 +7,8 @@ import { useForm } from 'react-hook-form'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
+import { Input } from '@/components/ui/input'
+import { InputGroup } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/useAuth'
 import { RegistrarUsuarioData, registrarUsuarioSchema } from '@/lib/schemas/usuario'
@@ -30,49 +31,48 @@ export default function RegisterPage() {
       <h1 className="text-2xl font-bold text-center">Cadastrar</h1>
 
       <InputGroup>
-        <InputGroupInput {...register('nome')} type="text" id="nome" />
-        <InputGroupAddon align="block-start">
-          <Label htmlFor="nome">Nome <span className='text-red-600'>*</span></Label>
-        </InputGroupAddon>
+        <Label htmlFor="nome">Nome <span className='text-red-600'>*</span></Label>
+        <Input {...register('nome')} type="text" id="nome" />
+
+        {errors.nome
+          && <Alert variant="field-error">
+            <AlertOctagon />
+            <AlertDescription>{errors.nome?.message}</AlertDescription>
+          </Alert>}
       </InputGroup>
 
-      {errors.nome
-        && <Alert variant="field-error">
-          <AlertOctagon />
-          <AlertDescription>{errors.nome?.message}</AlertDescription>
-        </Alert>}
-
       <InputGroup>
-        <InputGroupInput {...register('email')} type="text" id="email" />
-        <InputGroupAddon align="block-start">
-          <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
-        </InputGroupAddon>
+        <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
+        <Input {...register('email')} type="text" id="email" />
+
+        {errors.email
+          && <Alert variant="field-error">
+            <AlertOctagon />
+            <AlertDescription>{errors.email?.message}</AlertDescription>
+          </Alert>}
       </InputGroup>
 
-      {errors.email
-        && <Alert variant="field-error">
-          <AlertOctagon />
-          <AlertDescription>{errors.email?.message}</AlertDescription>
-        </Alert>}
 
       <InputGroup>
-        <InputGroupInput {...register('senha')} type="password" id="senha" />
-        <InputGroupAddon align="block-start">
-          <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>
-        </InputGroupAddon>
+        <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>
+        <Input {...register('senha')} type="password" id="senha" />
+
+        {errors.senha
+          && <Alert variant="field-error">
+            <AlertOctagon />
+            <AlertDescription>{errors.senha?.message}</AlertDescription>
+          </Alert>}
       </InputGroup>
 
-      {errors.senha
-        && <Alert variant="field-error">
-          <AlertOctagon />
-          <AlertDescription>{errors.senha?.message}</AlertDescription>
-        </Alert>}
-
       <InputGroup>
-        <InputGroupInput {...register('telefone')} type="tel" id="telefone" />
-        <InputGroupAddon align="block-start">
-          <Label htmlFor="telefone">Telefone</Label>
-        </InputGroupAddon>
+        <Label htmlFor="telefone">Telefone</Label>
+        <Input {...register('telefone')} type="tel" id="telefone" />
+
+        {errors.telefone
+          && <Alert variant="field-error">
+            <AlertOctagon />
+            <AlertDescription>{errors.telefone?.message}</AlertDescription>
+          </Alert>}
       </InputGroup>
 
       <Button type="submit">Cadastrar</Button>

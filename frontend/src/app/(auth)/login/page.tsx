@@ -1,17 +1,20 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Label } from '@radix-ui/react-label'
 import { AlertOctagon } from 'lucide-react'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
+import { Input } from '@/components/ui/input'
+import { InputGroup } from '@/components/ui/input-group'
+import { Label } from '@/components/ui/label'
+import { useAuth } from '@/hooks/useAuth'
 import { LoginUsuarioData, loginUsuarioSchema } from '@/lib/schemas/usuario'
 
 export default function LoginPage() {
+  const { login } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginUsuarioData>({
     resolver: zodResolver(loginUsuarioSchema),
     mode: 'onChange',
@@ -19,6 +22,7 @@ export default function LoginPage() {
   })
 
   const onSubmit = (data: LoginUsuarioData) => {
+    login(data.email, data.senha)
   }
 
   return (
@@ -26,30 +30,27 @@ export default function LoginPage() {
       <h1 className="text-2xl font-bold text-center">Login</h1>
 
       <InputGroup>
-        <InputGroupInput {...register('email')} type="text" id="email" />
-        <InputGroupAddon align="block-start">
-          <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
-        </InputGroupAddon>
-      </InputGroup>
+        <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
+        <Input {...register('email')} type="text" id="email" />
 
-      {errors.email
-        && <Alert variant="field-error">
-          <AlertOctagon />
-          <AlertDescription>{errors.email?.message}</AlertDescription>
-        </Alert>}
+        {errors.email
+          && <Alert variant="field-error">
+            <AlertOctagon />
+            <AlertDescription>{errors.email?.message}</AlertDescription>
+          </Alert>}
+      </InputGroup>
 
       <InputGroup>
-        <InputGroupInput {...register('senha')} type="password" id="senha" />
-        <InputGroupAddon align="block-start">
-          <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>
-        </InputGroupAddon>
+        <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>
+        <Input {...register('senha')} type="password" id="senha" />
+
+        {errors.senha
+          && <Alert variant="field-error">
+            <AlertOctagon />
+            <AlertDescription>{errors.senha?.message}</AlertDescription>
+          </Alert>}
       </InputGroup>
 
-      {errors.senha
-        && <Alert variant="field-error">
-          <AlertOctagon />
-          <AlertDescription>{errors.senha?.message}</AlertDescription>
-        </Alert>}
 
       <Button type="submit">Entrar</Button>
 
