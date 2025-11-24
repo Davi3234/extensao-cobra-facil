@@ -2,19 +2,23 @@
 
 import { useEffect, useState } from 'react'
 
-import { getCurrentUsuario } from '@/lib/actions/auth'
 import { Usuario } from '@/types/models'
+import { api } from '@/app/api/api'
 
 export function useCurrentUsuario() {
   const [usuario, setUsuario] = useState<Usuario | null>(null)
 
+  const refresh = async () => {
+    const response = await api.get<Usuario>('/api/auth/me', { next: { tags: ['usuario-data'] } })
+
+    console.log(response)
+
+    setUsuario(response.value)
+  }
+
   useEffect(() => {
-    getCurrentUsuario().then(response => {
-      if (response.ok) {
-        setUsuario(response.value)
-      }
-    })
+    refresh()
   }, [])
 
-  return { usuario }
+  return { usuario, refresh }
 }

@@ -1,33 +1,30 @@
-import { Result } from '@/util/result'
+import { IResult, Result } from '@/util/result'
 
-export type RequestApi = Omit<RequestInit, 'body'> & { body?: object }
+export type RequestApi = Omit<RequestInit, 'body'> & {
+  body?: object
+  onRequest?: (url: string, options?: RequestApi) => RequestApi | undefined
+  onResponse?: (response: IResult<any>) => any
+}
 
-export async function createApi(prefix?: string, superOptions?: { onRequest?: (url: string, options?: RequestApi) => RequestApi | undefined }) {
+export async function createApi(prefix?: string, superOptions?: {
+  onRequest?: (url: string, options?: RequestApi) => RequestApi | undefined
+  onResponse?: (response: IResult<any>) => any
+}) {
   return {
     get: async<TResponse = any>(url: string, options?: RequestApi) => {
-      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
-
-      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'GET' })
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...options, ...superOptions, method: 'GET' })
     },
     post: async<TResponse = any>(url: string, options?: RequestApi) => {
-      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
-
-      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'POST' })
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...options, ...superOptions, method: 'POST' })
     },
     put: async<TResponse = any>(url: string, options?: RequestApi) => {
-      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
-
-      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'PUT' })
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...options, ...superOptions, method: 'PUT' })
     },
     delete: async<TResponse = any>(url: string, options?: RequestApi) => {
-      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
-
-      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'DELETE' })
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...options, ...superOptions, method: 'DELETE' })
     },
     options: async<TResponse = any>(url: string, options?: RequestApi) => {
-      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
-
-      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'OPTIONS' })
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...options, ...superOptions, method: 'OPTIONS' })
     },
   }
 }
@@ -43,13 +40,19 @@ async function internalRequest<TResponse = any>(url: string, options?: RequestAp
       },
     }
 
-    const response = await fetch(url, optionsRequest)
+    const fullOptions = options?.onRequest ? options?.onRequest(url, optionsRequest as any) || optionsRequest : optionsRequest
+
+    const response = await fetch(url, fullOptions as any)
 
     if (!response.ok) {
       return Result.error<TResponse>(await getError(response))
     }
 
     const responseData = await response.json()
+
+    if (Result.isResult<TResponse>(responseData)) {
+      return responseData
+    }
 
     return Result.ok<TResponse>(responseData as TResponse)
   } catch (error: any) {
