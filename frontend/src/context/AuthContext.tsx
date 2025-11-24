@@ -2,7 +2,7 @@
 
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useRouter } from 'next/navigation'
-import { createContext, useEffect } from 'react'
+import { createContext } from 'react'
 
 import { useNotification } from '@/hooks/useNotification'
 import { loginAction, signUpAction } from '@/lib/actions/auth'
@@ -19,7 +19,6 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>(null!)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [token, setToken] = useLocalStorage('token')
   const [usuario, setUsuario] = useLocalStorage('usuario')
   const router = useRouter()
   const { notify } = useNotification()
@@ -29,8 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (response.ok) {
       router.push('/dashboard')
-    }
-    else {
+    } else {
       notify({
         message: response.error || 'Erro ao efetuar login',
         type: 'error'
@@ -39,9 +37,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const registerUsuario = async (form: RegistrarUsuarioData) => {
-    await signUpAction(form).then(() => {
+    const response = await signUpAction(form)
+
+    if (response.ok) {
       router.push('/login')
-    })
+    } else {
+      notify({
+        message: response.error || 'Erro ao efetuar logout',
+        type: 'error'
+      })
+    }
   }
 
   const logout = () => {
@@ -49,12 +54,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     router.push('/login')
   }
-
-  useEffect(() => {
-    if (!token) {
-      return logout()
-    }
-  }, [token])
 
   return (
     <AuthContext.Provider value={{ usuario, login, registerUsuario, logout }}>

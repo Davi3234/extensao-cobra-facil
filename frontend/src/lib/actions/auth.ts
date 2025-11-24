@@ -41,3 +41,17 @@ export async function signUpAction(data: RegistrarUsuarioData) {
 
   return Result.ok(true)
 }
+
+export async function logoutAction() {
+  const cookieStore = await cookies()
+
+  cookieStore.set('auth_token', '', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 0,
+  })
+
+  return Result.ok(true)
+}
