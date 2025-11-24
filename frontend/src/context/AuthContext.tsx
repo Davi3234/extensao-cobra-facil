@@ -1,11 +1,11 @@
 'use client'
 
-import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useRouter } from 'next/navigation'
 import { createContext } from 'react'
 
+import { useCurrentUsuario } from '@/hooks/useCurrentUsuario'
 import { useNotification } from '@/hooks/useNotification'
-import { loginAction, signUpAction } from '@/lib/actions/auth'
+import { loginAction, logoutAction, signUpAction } from '@/lib/actions/auth'
 import { LoginUsuarioData, RegistrarUsuarioData } from '@/lib/schemas/usuario'
 import { Usuario } from '@/types/models'
 
@@ -13,13 +13,13 @@ interface AuthContextType {
   usuario: Usuario | null
   login: (data: LoginUsuarioData) => Promise<void>
   registerUsuario: (form: RegistrarUsuarioData) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextType>(null!)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [usuario, setUsuario] = useLocalStorage('usuario')
+  const { usuario } = useCurrentUsuario()
   const router = useRouter()
   const { notify } = useNotification()
 
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       router.push('/dashboard')
     } else {
       notify({
-        message: response.error || 'Erro ao efetuar login',
+        message: response.error || 'Erro ao efetuar o login',
         type: 'error'
       })
     }
@@ -43,16 +43,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       router.push('/login')
     } else {
       notify({
-        message: response.error || 'Erro ao efetuar logout',
+        message: response.error || 'Erro ao efetuar o cadastro do usuário',
         type: 'error'
       })
     }
   }
 
-  const logout = () => {
-    setUsuario(null)
+  const logout = async () => {
+    const response = await logoutAction()
 
-    router.push('/login')
+    if (response.ok) {
+      router.push('/login')
+    } else {
+      notify({
+        message: response.error || 'Erro ao efetuar o logout',
+        type: 'error'
+      })
+    }
   }
 
   return (
