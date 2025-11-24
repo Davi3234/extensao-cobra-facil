@@ -4,6 +4,11 @@ import { getApi } from '@/lib/actions/api'
 import { RegistrarTransacaoData } from '@/lib/schemas/transacao'
 import { Transacao } from '@/types/models'
 import { IResult, Result } from '@/util/result'
+import { revalidatePath } from 'next/cache'
+
+function revalidateTransacoes() {
+  revalidatePath('/(dashboard)/transacoes')
+}
 
 export async function buscarTransacoesAction(): Promise<IResult<Transacao[]>> {
   const request = await getApi()
@@ -30,6 +35,7 @@ export async function cadastrarTransacaoAction(data: RegistrarTransacaoData) {
     return Result.fromResult<boolean>(response)
   }
 
+  revalidateTransacoes()
   return Result.ok(true)
 }
 
@@ -42,6 +48,7 @@ export async function quitarTransacaoAction(id: number) {
     return Result.fromResult<boolean>(response)
   }
 
+  revalidateTransacoes()
   return Result.ok(true)
 }
 
@@ -54,5 +61,6 @@ export async function excluirTransacaoAction(id: number) {
     return Result.fromResult<boolean>(response)
   }
 
+  revalidateTransacoes()
   return Result.ok(true)
 }

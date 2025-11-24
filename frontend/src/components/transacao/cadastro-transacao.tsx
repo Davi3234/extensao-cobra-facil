@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertOctagon, Calendar as CalendarIcon, Save, X } from 'lucide-react'
+import { useContext, useTransition } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -18,6 +19,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { Toolbar } from '@/components/ui/toolbar'
 import { UsuarioCombobox } from '@/components/usuario/usuario-combobox'
+import { NotificationContext } from '@/context/NotificationContext'
 import { cadastrarTransacaoAction } from '@/lib/actions/transaction'
 import { formatPtBR } from '@/lib/date'
 import { RegistrarTransacaoData, registrarTransacaoSchema } from '@/lib/schemas/transacao'
@@ -25,9 +27,10 @@ import { Transacao } from '@/types/models'
 
 export type CadastroTransacaoProps = {
   transacao?: Transacao
+  onSuccess?: () => void
 }
 
-export default function CadastroTransacao({ transacao }: CadastroTransacaoProps) {
+export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoProps) {
   const { control, register, handleSubmit, getValues, formState: { errors }, reset } = useForm<RegistrarTransacaoData>({
     resolver: zodResolver(registrarTransacaoSchema),
     mode: 'onTouched',
@@ -37,21 +40,28 @@ export default function CadastroTransacao({ transacao }: CadastroTransacaoProps)
     }
   })
 
+  const { notify } = useContext(NotificationContext)
+  const [isPending, startTransition] = useTransition()
+
   const cadastrar = (data: RegistrarTransacaoData) => {
-    cadastrarTransacaoAction(data)
-      .then(result => {
+    startTransition(async () => {
+      try {
+        const result = await cadastrarTransacaoAction(data)
         if (result.ok) {
           reset()
+          notify({ type: 'success', title: 'Sucesso', message: 'Transação criada' })
+          onSuccess?.()
+        } else {
+          notify({ type: 'error', title: 'Erro', message: result.error || 'Erro ao criar transação' })
         }
-      })
+      } catch (err) {
+        notify({ type: 'error', title: 'Erro', message: 'Erro ao criar transação' })
+      }
+    })
   }
 
   const atualizar = (data: RegistrarTransacaoData) => {
-    if (!transacao) {
-      return
-    }
-
-    // Atualizar
+    if (!transacao) return
   }
 
   return (
@@ -60,7 +70,7 @@ export default function CadastroTransacao({ transacao }: CadastroTransacaoProps)
 
       <InputGroup>
         <Label htmlFor="valor">Valor (R$)<span className='text-red-600'>*</span></Label>
-        <Input id="valor" {...register('valor')} />
+        <Input id="valor" {...register('valor')} disabled={isPending} />
 
         {errors.valor
           && <Alert variant="field-error">
@@ -71,7 +81,7 @@ export default function CadastroTransacao({ transacao }: CadastroTransacaoProps)
 
       <InputGroup>
         <Label htmlFor="descricao">Descrição</Label>
-        <Textarea id="descricao" className='resize-none' {...register('descricao')} />
+        <Textarea id="descricao" className='resize-none' {...register('descricao')} disabled={isPending} />
 
         {errors.descricao
           && <Alert variant="field-error">
@@ -85,7 +95,7 @@ export default function CadastroTransacao({ transacao }: CadastroTransacaoProps)
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" data-empty={!getValues('dataVencimento')} className="text-foreground w-[280px] justify-start text-left font-normal">
+            <Button variant="outline" data-empty={!getValues('dataVencimento')} className="text-foreground w-[280px] justify-start text-left font-normal" disabled={isPending}>
               <CalendarIcon />
               {getValues('dataVencimento') ? formatPtBR(getValues('dataVencimento')!) : <span>Selecione a uma data</span>}
             </Button>
@@ -153,8 +163,8 @@ export default function CadastroTransacao({ transacao }: CadastroTransacaoProps)
       </InputGroup>
 
       <Toolbar>
-        <Button type="submit"><Save size={22} /> {transacao ? 'Atualizar' : 'Criar'}</Button>
-        {transacao && <Button type="button" onClick={() => reset()}><X size={22} /> Cancelar</Button>}
+        <Button type="submit" disabled={isPending}><Save size={22} /> {isPending ? 'Enviando...' : (transacao ? 'Atualizar' : 'Criar')}</Button>
+        {transacao && <Button type="button" onClick={() => { reset(); onSuccess?.() }} disabled={isPending}><X size={22} /> Cancelar</Button>}
       </Toolbar>
     </form>
   )

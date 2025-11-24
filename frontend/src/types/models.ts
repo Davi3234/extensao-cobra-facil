@@ -17,8 +17,8 @@ export type Transacao = {
   id: number
   valor: number
   descricao?: string
-  dataVencimento: string // ISO
-  dataPagamento?: string | null // ISO
+  dataVencimento: string
+  dataPagamento?: string | null
   creditorId: number
   debtorId: number
   status: TransacaoStatus
