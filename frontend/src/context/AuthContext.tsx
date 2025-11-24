@@ -19,7 +19,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>(null!)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { usuario } = useCurrentUsuario()
+  const { usuario, refresh } = useCurrentUsuario()
   const router = useRouter()
   const { notify } = useNotification()
 
@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const response = await loginAction(data)
 
     if (response.ok) {
+      refresh()
       router.push('/dashboard')
     } else {
       notify({

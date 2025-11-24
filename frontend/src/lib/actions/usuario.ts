@@ -4,6 +4,11 @@ import { getApi } from '@/lib/actions/api'
 import { RegistrarUsuarioData } from '@/lib/schemas/usuario'
 import { Usuario } from '@/types/models'
 import { Result } from '@/util/result'
+import { revalidatePath } from 'next/cache'
+
+function revalidateUsuarios() {
+  revalidatePath('/(dashboard)/usuarios')
+}
 
 export async function buscarUsuariosAction() {
   const request = await getApi()
@@ -30,6 +35,7 @@ export async function registrarUsuarioAction(data: RegistrarUsuarioData) {
     return Result.fromResult<boolean>(response)
   }
 
+  revalidateUsuarios()
   return Result.ok(true)
 }
 
@@ -42,6 +48,7 @@ export async function updateUsuarioAction(id: number, data: RegistrarUsuarioData
     return Result.fromResult<boolean>(response)
   }
 
+  revalidateUsuarios()
   return Result.ok(true)
 }
 
@@ -54,5 +61,6 @@ export async function inativarUsuarioAction(id: number) {
     return Result.fromResult<boolean>(response)
   }
 
+  revalidateUsuarios()
   return Result.ok(true)
 }
