@@ -1,8 +1,18 @@
 'use client'
 
-import { Edit, Trash, Users } from 'lucide-react'
+import { Edit, ShieldOff, Users } from 'lucide-react'
 import { useState } from 'react'
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { CadastroUsuario } from '@/components/usuario/cadastro-usuario'
 import { ListUsuario } from '@/components/usuario/list-usuario'
 import { inativarUsuarioAction } from '@/lib/actions/usuario'
@@ -48,7 +58,21 @@ export default function UsuariosPage() {
 
                     <div className="flex gap-2">
                       <button onClick={() => editar(usuario)} className="text-blue-600 text-sm"><Edit /></button>
-                      <button onClick={() => inativar(usuario.id)} className="text-red-600 text-sm"><Trash /></button>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button className="text-red-600 text-sm"><ShieldOff /></button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Deseja inativar o usuário?</AlertDialogTitle>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => inativar(usuario.id)}>Confirmar</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
 
