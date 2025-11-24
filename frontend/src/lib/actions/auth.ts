@@ -1,6 +1,5 @@
 'use server'
 
-import { updateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 
 import { getApi } from '@/lib/actions/api'
@@ -11,11 +10,7 @@ import { Result } from '@/util/result'
 export async function getCurrentUsuario() {
   const request = await getApi()
 
-  const response = await request.get<Usuario>('/auth/me', {
-    next: {
-      tags: ['usuario-data']
-    }
-  })
+  const response = await request.get<Usuario>('/auth/me')
 
   if (!response.ok) {
     return Result.fromResult<Usuario | null>(response)
@@ -43,8 +38,6 @@ export async function loginAction(data: LoginUsuarioData) {
     maxAge: 60 * 60 * 24,
   })
 
-  updateTag('usuario-data')
-
   return Result.ok(true)
 }
 
@@ -57,23 +50,13 @@ export async function signUpAction(data: RegistrarUsuarioData) {
     return Result.fromResult<boolean>(response)
   }
 
-  updateTag('usuarios')
-
   return Result.ok(true)
 }
 
 export async function logoutAction() {
   const cookieStore = await cookies()
 
-  cookieStore.set('auth_token', '', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
-    path: '/',
-    maxAge: 0,
-  })
-
-  updateTag('usuario-data')
+  cookieStore.delete('auth_token')
 
   return Result.ok(true)
 }

@@ -11,11 +11,7 @@ export async function calcularSaldoAction() {
     totalReceber: number
     totalPagar: number
     saldoGeral: number
-  }>('/relatorios/saldo', {
-    next: {
-      tags: ['relatorio']
-    }
-  })
+  }>('/relatorios/saldo')
 
   return response
 }
@@ -42,11 +38,7 @@ export async function contarTransacaoStatus() {
 export async function buscarTransacoesQuitadasAction() {
   const request = await getApi()
 
-  const response = await request.get<Transacao[]>('/relatorios/quitadas', {
-    next: {
-      tags: ['relatorio']
-    }
-  })
+  const response = await request.get<Transacao[]>('/relatorios/quitadas')
 
   return response
 }
@@ -54,11 +46,7 @@ export async function buscarTransacoesQuitadasAction() {
 export async function buscarTransacoesAtrasadasAction() {
   const request = await getApi()
 
-  const response = await request.get<Transacao[]>('/relatorios/atrasadas', {
-    next: {
-      tags: ['relatorio']
-    }
-  })
+  const response = await request.get<Transacao[]>('/relatorios/atrasadas')
 
   return response
 }

@@ -1,7 +1,5 @@
 'use server'
 
-import { updateTag } from 'next/cache'
-
 import { getApi } from '@/lib/actions/api'
 import { RegistrarTransacaoData } from '@/lib/schemas/transacao'
 import { Transacao } from '@/types/models'
@@ -10,11 +8,7 @@ import { IResult, Result } from '@/util/result'
 export async function buscarTransacoesAction(): Promise<IResult<Transacao[]>> {
   const request = await getApi()
 
-  const response = await request.get<Transacao[]>('/transacoes', {
-    next: {
-      tags: ['transacoes']
-    }
-  })
+  const response = await request.get<Transacao[]>('/transacoes')
 
   return response
 }
@@ -36,9 +30,6 @@ export async function cadastrarTransacaoAction(data: RegistrarTransacaoData) {
     return Result.fromResult<boolean>(response)
   }
 
-  updateTag('transacoes')
-  updateTag('relatorio')
-
   return Result.ok(true)
 }
 
@@ -51,9 +42,6 @@ export async function quitarTransacaoAction(id: number) {
     return Result.fromResult<boolean>(response)
   }
 
-  updateTag('transacoes')
-  updateTag('relatorio')
-
   return Result.ok(true)
 }
 
@@ -65,9 +53,6 @@ export async function excluirTransacaoAction(id: number) {
   if (!response.ok) {
     return Result.fromResult<boolean>(response)
   }
-
-  updateTag('transacoes')
-  updateTag('relatorio')
 
   return Result.ok(true)
 }
