@@ -3,14 +3,30 @@
 import { updateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 
+import { getApi } from '@/lib/actions/api'
 import { LoginUsuarioData, RegistrarUsuarioData } from '@/lib/schemas/usuario'
-import { createRequest } from '@/util/api'
-import { env } from '@/util/env'
+import { Usuario } from '@/types/models'
 import { Result } from '@/util/result'
 
-const request = await createRequest(env('API_URL'))
+export async function getCurrentUsuario() {
+  const request = await getApi()
+
+  const response = await request.get<Usuario>('/auth/me', {
+    next: {
+      tags: ['usuario-data']
+    }
+  })
+
+  if (!response.ok) {
+    return Result.fromResult<Usuario | null>(response)
+  }
+
+  return response
+}
 
 export async function loginAction(data: LoginUsuarioData) {
+  const request = await getApi()
+
   const cookieStore = await cookies()
 
   const response = await request.post<{ token: string }>('/auth/login', { body: data })
@@ -27,10 +43,14 @@ export async function loginAction(data: LoginUsuarioData) {
     maxAge: 60 * 60 * 24,
   })
 
+  updateTag('usuario-data')
+
   return Result.ok(true)
 }
 
 export async function signUpAction(data: RegistrarUsuarioData) {
+  const request = await getApi()
+
   const response = await request.post('/auth/register', { body: data })
 
   if (!response.ok) {
@@ -52,6 +72,8 @@ export async function logoutAction() {
     path: '/',
     maxAge: 0,
   })
+
+  updateTag('usuario-data')
 
   return Result.ok(true)
 }

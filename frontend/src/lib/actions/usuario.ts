@@ -2,15 +2,14 @@
 
 import { updateTag } from 'next/cache'
 
+import { getApi } from '@/lib/actions/api'
 import { RegistrarUsuarioData } from '@/lib/schemas/usuario'
 import { Usuario } from '@/types/models'
-import { createRequest } from '@/util/api'
-import { env } from '@/util/env'
 import { Result } from '@/util/result'
 
-const request = await createRequest(env('API_URL'))
-
 export async function buscarUsuariosAction() {
+  const request = await getApi()
+
   const response = await request.get<Usuario[]>('/usuarios', {
     next: {
       tags: ['usuarios']
@@ -21,12 +20,16 @@ export async function buscarUsuariosAction() {
 }
 
 export async function buscarUsuarioAction(id: number) {
+  const request = await getApi()
+
   const response = await request.get<Usuario>(`/usuarios/${id}`)
 
   return response
 }
 
 export async function registrarUsuarioAction(data: RegistrarUsuarioData) {
+  const request = await getApi()
+
   const response = await request.post('/usuarios', { body: data })
 
   if (!response.ok) {
@@ -39,6 +42,8 @@ export async function registrarUsuarioAction(data: RegistrarUsuarioData) {
 }
 
 export async function updateUsuarioAction(id: number, data: RegistrarUsuarioData) {
+  const request = await getApi()
+
   const response = await request.put(`/usuarios/${id}`, { body: data })
 
   if (!response.ok) {
@@ -51,6 +56,8 @@ export async function updateUsuarioAction(id: number, data: RegistrarUsuarioData
 }
 
 export async function inativarUsuarioAction(id: number) {
+  const request = await getApi()
+
   const response = await request.delete(`/usuarios/${id}`)
 
   if (!response.ok) {

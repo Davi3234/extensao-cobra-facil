@@ -2,15 +2,14 @@
 
 import { updateTag } from 'next/cache'
 
+import { getApi } from '@/lib/actions/api'
 import { RegistrarTransacaoData } from '@/lib/schemas/transacao'
 import { Transacao } from '@/types/models'
-import { createRequest } from '@/util/api'
-import { env } from '@/util/env'
 import { IResult, Result } from '@/util/result'
 
-const request = await createRequest(env('API_URL'))
-
 export async function buscarTransacoesAction(): Promise<IResult<Transacao[]>> {
+  const request = await getApi()
+
   const response = await request.get<Transacao[]>('/transacoes', {
     next: {
       tags: ['transacoes']
@@ -21,12 +20,16 @@ export async function buscarTransacoesAction(): Promise<IResult<Transacao[]>> {
 }
 
 export async function buscarTransacaoAction(id: number) {
+  const request = await getApi()
+
   const response = await request.get<Transacao>(`/transacoes/${id}`)
 
   return response
 }
 
 export async function cadastrarTransacaoAction(data: RegistrarTransacaoData) {
+  const request = await getApi()
+
   const response = await request.post('/transacoes', { body: data })
 
   if (!response.ok) {
@@ -40,6 +43,8 @@ export async function cadastrarTransacaoAction(data: RegistrarTransacaoData) {
 }
 
 export async function quitarTransacaoAction(id: number) {
+  const request = await getApi()
+
   const response = await request.put(`/transacoes/quitar/${id}`)
 
   if (!response.ok) {
@@ -53,6 +58,8 @@ export async function quitarTransacaoAction(id: number) {
 }
 
 export async function excluirTransacaoAction(id: number) {
+  const request = await getApi()
+
   const response = await request.put(`/transacoes/${id}`)
 
   if (!response.ok) {

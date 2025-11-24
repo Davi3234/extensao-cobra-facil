@@ -2,31 +2,48 @@ import { Result } from '@/util/result'
 
 export type RequestApi = Omit<RequestInit, 'body'> & { body?: object }
 
-export async function createRequest(prefix?: string) {
+export async function createApi(prefix?: string, superOptions?: { onRequest?: (url: string, options?: RequestApi) => RequestApi | undefined }) {
   return {
-    get: async<TResponse = any>(url: string, options?: RequestApi) =>
-      await internalRequest<TResponse>(`${prefix}${url}`, { ...options, method: 'GET' }),
-    post: async<TResponse = any>(url: string, options?: RequestApi) =>
-      await internalRequest<TResponse>(`${prefix}${url}`, { ...options, method: 'POST' }),
-    put: async<TResponse = any>(url: string, options?: RequestApi) =>
-      await internalRequest<TResponse>(`${prefix}${url}`, { ...options, method: 'PUT' }),
-    delete: async<TResponse = any>(url: string, options?: RequestApi) =>
-      await internalRequest<TResponse>(`${prefix}${url}`, { ...options, method: 'DELETE' }),
-    options: async<TResponse = any>(url: string, options?: RequestApi) =>
-      await internalRequest<TResponse>(`${prefix}${url}`, { ...options, method: 'OPTIONS' }),
+    get: async<TResponse = any>(url: string, options?: RequestApi) => {
+      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
+
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'GET' })
+    },
+    post: async<TResponse = any>(url: string, options?: RequestApi) => {
+      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
+
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'POST' })
+    },
+    put: async<TResponse = any>(url: string, options?: RequestApi) => {
+      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
+
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'PUT' })
+    },
+    delete: async<TResponse = any>(url: string, options?: RequestApi) => {
+      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
+
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'DELETE' })
+    },
+    options: async<TResponse = any>(url: string, options?: RequestApi) => {
+      const optionRequest = superOptions?.onRequest ? superOptions?.onRequest(url, options) : options
+
+      return await internalRequest<TResponse>(`${prefix}${url}`, { ...optionRequest, method: 'OPTIONS' })
+    },
   }
 }
 
 async function internalRequest<TResponse = any>(url: string, options?: RequestApi) {
   try {
-    const response = await fetch(url, {
+    const optionsRequest = {
       ...options,
       body: options?.body !== undefined ? JSON.stringify(options.body) : undefined,
       headers: {
         ...options?.headers,
         'Content-Type': (options?.headers as any)?.['Content-Type'] || 'application/json',
       },
-    })
+    }
+
+    const response = await fetch(url, optionsRequest)
 
     if (!response.ok) {
       return Result.error<TResponse>(await getError(response))

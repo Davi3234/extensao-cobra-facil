@@ -1,13 +1,12 @@
 'use server'
 
+import { getApi } from '@/lib/actions/api'
 import { Transacao } from '@/types/models'
-import { createRequest } from '@/util/api'
-import { env } from '@/util/env'
 import { Result } from '@/util/result'
 
-const request = await createRequest(env('API_URL'))
-
 export async function calcularSaldoAction() {
+  const request = await getApi()
+
   const response = await request.get<{
     totalReceber: number
     totalPagar: number
@@ -41,6 +40,8 @@ export async function contarTransacaoStatus() {
 }
 
 export async function buscarTransacoesQuitadasAction() {
+  const request = await getApi()
+
   const response = await request.get<Transacao[]>('/relatorios/quitadas', {
     next: {
       tags: ['relatorio']
@@ -51,6 +52,8 @@ export async function buscarTransacoesQuitadasAction() {
 }
 
 export async function buscarTransacoesAtrasadasAction() {
+  const request = await getApi()
+
   const response = await request.get<Transacao[]>('/relatorios/atrasadas', {
     next: {
       tags: ['relatorio']
