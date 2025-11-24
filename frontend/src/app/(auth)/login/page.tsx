@@ -3,6 +3,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertOctagon } from 'lucide-react'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -14,7 +16,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { LoginUsuarioData, loginUsuarioSchema } from '@/lib/schemas/usuario'
 
 export default function LoginPage() {
-  const { login } = useAuth()
+  const { usuario, login } = useAuth()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginUsuarioData>({
     resolver: zodResolver(loginUsuarioSchema),
     mode: 'onTouched',
@@ -24,6 +26,12 @@ export default function LoginPage() {
   const onSubmit = (data: LoginUsuarioData) => {
     login(data)
   }
+
+  useEffect(() => {
+    if (usuario) {
+      redirect('/dashboard')
+    }
+  })
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
