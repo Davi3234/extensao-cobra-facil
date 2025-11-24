@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 import { buscarUsuariosAction } from '@/lib/actions/usuario'
 import { Usuario } from '@/types/models'
@@ -8,8 +8,16 @@ export type ListUsuarioProps = {
   item?: (usuario: Usuario) => ReactNode
 }
 
-export async function ListUsuario({ usuario: usuarioSelected, item }: ListUsuarioProps) {
-  const usuarios = (await buscarUsuariosAction()).value || []
+export function ListUsuario({ usuario: usuarioSelected, item }: ListUsuarioProps) {
+  const [usuarios, setUsuarios] = useState<Usuario[]>([])
+
+  useEffect(() => {
+    buscarUsuariosAction().then(response => {
+      if (response.ok) {
+        setUsuarios(response.value)
+      }
+    })
+  })
 
   return (
     <>

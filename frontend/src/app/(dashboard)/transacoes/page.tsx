@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import CadastroTransacao from '@/components/transacao/cadastro-transacao'
-import ListTransacao from '@/components/transacao/list-usuario'
+import ListTransacao from '@/components/transacao/list-transaction'
 import { excluirTransacaoAction, quitarTransacaoAction } from '@/lib/actions/transaction'
 import { Transacao, TransacaoStatus } from '@/types/models'
 

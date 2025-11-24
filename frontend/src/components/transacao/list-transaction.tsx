@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 import { buscarTransacoesAction } from '@/lib/actions/transaction'
 import { Transacao } from '@/types/models'
@@ -8,8 +8,16 @@ export type ListTransacaoProps = {
   item?: (transacao: Transacao) => ReactNode
 }
 
-export default async function ListTransacao({ transacao: transacaoSelecionada, item }: ListTransacaoProps) {
-  const transacoes = (await buscarTransacoesAction()).value || []
+export default function ListTransacao({ transacao: transacaoSelecionada, item }: ListTransacaoProps) {
+  const [transacoes, setTransacoes] = useState<Transacao[]>([])
+
+  useEffect(() => {
+    buscarTransacoesAction().then(response => {
+      if (response.ok) {
+        setTransacoes(response.value)
+      }
+    })
+  })
 
   return (
     <>
