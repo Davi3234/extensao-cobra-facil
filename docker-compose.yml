@@ -15,6 +15,7 @@ services:
       - ./backend/.env
     environment:
       SPRING_PROFILES_ACTIVE: dev
+      SPRING_DEVTOOLS_RESTART_TRIGGERFILE: .trigger
     depends_on:
       - db
 

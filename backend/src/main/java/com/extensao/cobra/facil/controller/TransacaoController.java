@@ -3,8 +3,11 @@ package com.extensao.cobra.facil.controller;
 import com.extensao.cobra.facil.dto.transacao.TransacaoDtoRequest;
 import com.extensao.cobra.facil.dto.transacao.TransacaoDtoResponse;
 import com.extensao.cobra.facil.entity.TransacaoEntidade;
+import com.extensao.cobra.facil.entity.UsuarioEntidade;
+import com.extensao.cobra.facil.exception.UsuarioJaExistenteException;
 import com.extensao.cobra.facil.mapper.TransacaoMapper;
 import com.extensao.cobra.facil.service.TransacaoService;
+import com.extensao.cobra.facil.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +21,19 @@ public class TransacaoController {
 
     @Autowired
     private TransacaoService transacaoService;
+    @Autowired
+    UsuarioService usuarioService;
 
     @PostMapping
     public ResponseEntity<TransacaoDtoResponse> criar(@RequestBody TransacaoDtoRequest dto) {
-        TransacaoEntidade transacaoEntidade = this.transacaoService.criarTransacao(TransacaoMapper.transacaoEntidade(dto));
+        UsuarioEntidade usuarioCredor = usuarioService.getUsuarioById(dto.credorId());
+        UsuarioEntidade usuarioDevedor = usuarioService.getUsuarioById(dto.devedorId());
+
+        TransacaoEntidade transacaoEntidadeRequest = TransacaoMapper.transacaoEntidade(dto);
+        transacaoEntidadeRequest.setUsuarioDevedor(usuarioDevedor);
+        transacaoEntidadeRequest.setUsuarioCredor(usuarioCredor);
+
+        TransacaoEntidade transacaoEntidade = this.transacaoService.criarTransacao(transacaoEntidadeRequest);
 
         return ResponseEntity.ok(TransacaoMapper.criaTransacaoDtoResponse(transacaoEntidade));
     }

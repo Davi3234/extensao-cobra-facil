@@ -11,9 +11,7 @@ public class TransacaoMapper {
         return new TransacaoEntidade()
                 .setValor(dto.valor())
                 .setDescricao(dto.descricao())
-                .setDataVencimento(dto.dataVencimento())
-                .setUsuarioCredor((new UsuarioEntidade()).setId(dto.credorId()))
-                .setUsuarioDevedor((new UsuarioEntidade()).setId(dto.credorId()));
+                .setDataVencimento(dto.dataVencimento());
     }
 
     public static TransacaoDtoResponse criaTransacaoDtoResponse(TransacaoEntidade transacaoEntidade) {

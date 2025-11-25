@@ -1,5 +1,7 @@
 package com.extensao.cobra.facil.dto.relatorio;
 
+import com.extensao.cobra.facil.dto.usuario.UsuarioDtoResponse;
+
 import java.time.LocalDate;
 
 public record RelatorioTransacaoDtoResponse(
@@ -9,5 +11,6 @@ public record RelatorioTransacaoDtoResponse(
         LocalDate dataVencimento,
         LocalDate dataPagamento,
         int status,
-        Long contraparteId) {
+        UsuarioDtoResponse usuarioCredor,
+        UsuarioDtoResponse usuarioDevedor) {
 }
