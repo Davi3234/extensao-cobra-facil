@@ -124,10 +124,10 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
 
       <InputGroup>
         <Controller
-          name="creditorId"
+          name="credorId"
           control={control}
           render={({ field }) => (<>
-            <Label htmlFor="debtorId">Credor <span className='text-red-600'>*</span></Label>
+            <Label htmlFor="devedorId">Credor <span className='text-red-600'>*</span></Label>
             <UsuarioCombobox
               value={field.value as any}
               onChange={field.onChange}
@@ -135,19 +135,19 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
           </>)}
         />
 
-        {errors.creditorId
+        {errors.credorId
           && <Alert variant="field-error">
             <AlertOctagon />
-            <AlertDescription>{errors.creditorId?.message}</AlertDescription>
+            <AlertDescription>{errors.credorId?.message}</AlertDescription>
           </Alert>}
       </InputGroup>
 
       <InputGroup>
         <Controller
-          name="debtorId"
+          name="devedorId"
           control={control}
           render={({ field }) => (<>
-            <Label htmlFor="debtorId">Devedor <span className='text-red-600'>*</span></Label>
+            <Label htmlFor="devedorId">Devedor <span className='text-red-600'>*</span></Label>
             <UsuarioCombobox
               value={field.value as any}
               onChange={field.onChange}
@@ -155,10 +155,10 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
           </>)}
         />
 
-        {errors.debtorId
+        {errors.devedorId
           && <Alert variant="field-error">
             <AlertOctagon />
-            <AlertDescription>{errors.debtorId?.message}</AlertDescription>
+            <AlertDescription>{errors.devedorId?.message}</AlertDescription>
           </Alert>}
       </InputGroup>
 

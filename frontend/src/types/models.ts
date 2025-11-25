@@ -19,8 +19,8 @@ export type Transacao = {
   descricao?: string
   dataVencimento: string
   dataPagamento?: string | null
-  creditorId: number
-  debtorId: number
+  credorId: number
+  devedorId: number
   status: TransacaoStatus
 }
 
