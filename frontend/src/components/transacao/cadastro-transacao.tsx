@@ -35,9 +35,17 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
     resolver: zodResolver(registrarTransacaoSchema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
-    defaultValues: {
-      valor: 0
-    }
+    defaultValues: transacao
+      ? {
+        valor: transacao.valor,
+        credorId: transacao.usuarioCredor.id,
+        devedorId: transacao.usuarioDevedor.id,
+        descricao: transacao.descricao || '',
+        dataVencimento: transacao.dataVencimento ? new Date(transacao.dataVencimento) : undefined
+      }
+      : {
+        valor: 0
+      }
   })
 
   const { notify } = useContext(NotificationContext)

@@ -55,7 +55,7 @@ export async function quitarTransacaoAction(id: number) {
 export async function excluirTransacaoAction(id: number) {
   const request = await getApi()
 
-  const response = await request.put(`/transacoes/${id}`)
+  const response = await request.delete(`/transacoes/${id}`)
 
   if (!response.ok) {
     return Result.fromResult<boolean>(response)
