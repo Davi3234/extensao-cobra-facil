@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertOctagon } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -17,6 +17,7 @@ import { LoginUsuarioData, loginUsuarioSchema } from '@/lib/schemas/usuario'
 
 export default function LoginPage() {
   const { usuario, login } = useAuth()
+  const [isPending, startTransition] = useTransition()
   const { register, handleSubmit, formState: { errors } } = useForm<LoginUsuarioData>({
     resolver: zodResolver(loginUsuarioSchema),
     mode: 'onTouched',
@@ -24,7 +25,9 @@ export default function LoginPage() {
   })
 
   const onSubmit = (data: LoginUsuarioData) => {
-    login(data)
+    startTransition(async () => {
+      await login(data)
+    })
   }
 
   useEffect(() => {
@@ -39,7 +42,7 @@ export default function LoginPage() {
 
       <InputGroup>
         <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
-        <Input {...register('email')} type="text" id="email" />
+        <Input {...register('email')} type="text" id="email" disabled={isPending} />
 
         {errors.email
           && <Alert variant="field-error">
@@ -50,7 +53,7 @@ export default function LoginPage() {
 
       <InputGroup>
         <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>
-        <Input {...register('senha')} type="password" id="senha" />
+        <Input {...register('senha')} type="password" id="senha" disabled={isPending} />
 
         {errors.senha
           && <Alert variant="field-error">
@@ -59,8 +62,7 @@ export default function LoginPage() {
           </Alert>}
       </InputGroup>
 
-
-      <Button type="submit">Entrar</Button>
+      <Button type="submit" disabled={isPending}>{isPending ? 'Processando...' : 'Entrar'}</Button>
 
       <p className="text-sm text-center">
         Não tem conta? <Link href="/sign-up" className="text-blue-600">Cadastre-se</Link>
