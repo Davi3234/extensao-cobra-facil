@@ -28,7 +28,7 @@ public class RelatorioService {
                 .mapToDouble(TransacaoEntidade::getValor)
                 .sum();
 
-        double totalReceber = totalPagar; // se quiser separar depois, é só alterar
+        double totalReceber = totalPagar;
 
         double saldo = totalReceber - totalPagar;
 

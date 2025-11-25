@@ -1,20 +1,20 @@
 package com.extensao.cobra.facil.mapper;
 
-import com.extensao.cobra.facil.dto.usuario.CriaUsuarioDtoRequest;
-import com.extensao.cobra.facil.dto.usuario.CriaUsuarioDtoResponse;
+import com.extensao.cobra.facil.dto.usuario.UsuarioDtoRequest;
+import com.extensao.cobra.facil.dto.usuario.UsuarioDtoResponse;
 import com.extensao.cobra.facil.entity.UsuarioEntidade;
 
 public class UsuarioMapper {
-    public static CriaUsuarioDtoRequest criaUsuarioDtoRequest(UsuarioEntidade usuarioEntidade){
-        return new CriaUsuarioDtoRequest(
+    public static UsuarioDtoRequest criaUsuarioDtoRequest(UsuarioEntidade usuarioEntidade){
+        return new UsuarioDtoRequest(
                 usuarioEntidade.getNome(),
                 usuarioEntidade.getEmail(),
                 usuarioEntidade.getTelefone(),
                 usuarioEntidade.getSenha()
         );
     }
-    public static CriaUsuarioDtoResponse criaUsuarioDtoResponse(UsuarioEntidade usuarioEntidade){
-        return new CriaUsuarioDtoResponse(
+    public static UsuarioDtoResponse criaUsuarioDtoResponse(UsuarioEntidade usuarioEntidade){
+        return new UsuarioDtoResponse(
                 usuarioEntidade.getId(),
                 usuarioEntidade.getNome(),
                 usuarioEntidade.getEmail(),
@@ -23,11 +23,11 @@ public class UsuarioMapper {
         );
     }
 
-    public static UsuarioEntidade usuarioEntidade(CriaUsuarioDtoRequest criaUsuarioDtoRequest){
+    public static UsuarioEntidade usuarioEntidade(UsuarioDtoRequest usuarioDtoRequest){
         return new UsuarioEntidade()
-                .setSenha(criaUsuarioDtoRequest.senha())
-                .setEmail(criaUsuarioDtoRequest.email())
-                .setTelefone(criaUsuarioDtoRequest.telefone())
-                .setNome(criaUsuarioDtoRequest.nome());
+                .setSenha(usuarioDtoRequest.senha())
+                .setEmail(usuarioDtoRequest.email())
+                .setTelefone(usuarioDtoRequest.telefone())
+                .setNome(usuarioDtoRequest.nome());
     }
 }
