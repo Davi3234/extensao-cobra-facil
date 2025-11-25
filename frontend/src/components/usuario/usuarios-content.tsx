@@ -18,6 +18,7 @@ import { NotificationContext } from '@/context/NotificationContext'
 import { useUsuarios } from '@/context/Usuarios'
 import { inativarUsuarioAction } from '@/lib/actions/usuario'
 import { Usuario } from '@/types/models'
+import { Button } from '../ui/button'
 
 export type UsuariosContentProps = {
   usuarios: Usuario[]
@@ -62,12 +63,22 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
                   <div className='text-xs text-gray-500'>{usuario.email} • {usuario.telefone}</div>
                 </div>
 
-                <div className='flex gap-2'>
-                  <button onClick={() => setUsuarioSelecionado(usuario)} className='text-blue-600 text-sm'><Edit /></button>
+                <div className='flex gap-1'>
+                  <Button
+                    variant={'ghost'}
+                    onClick={() => setUsuarioSelecionado(usuario)}
+                    className='text-blue-600 hover:text-blue-500'
+                    size={'icon'}
+                    title='Editar'
+                  >
+                    <Edit />
+                  </Button>
 
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <button className='text-red-600 text-sm'><ShieldOff /></button>
+                      <Button variant={'ghost'} className='text-red-600 hover:text-red-500' size={'icon'} title='Inativar'>
+                        <ShieldOff />
+                      </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
