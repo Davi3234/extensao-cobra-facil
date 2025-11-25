@@ -6,6 +6,8 @@ import com.extensao.cobra.facil.repository.TransacaoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TransacaoService {
 
@@ -27,5 +29,9 @@ public class TransacaoService {
                 .setDataPagamento(java.time.LocalDate.now());
 
         return this.transacaoRepositorio.save(transacaoEntidade);
+    }
+
+    public List<TransacaoEntidade> listarTransacoes() {
+        return this.transacaoRepositorio.findByUsuario();
     }
 }

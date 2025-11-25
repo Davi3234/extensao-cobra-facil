@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/transacoes")
 public class TransacaoController {
@@ -34,5 +37,16 @@ public class TransacaoController {
     @DeleteMapping("/{id}")
     public void excluir(@PathVariable Long id) {
         this.transacaoService.excluirTransacao(id);
+    }
+
+    @GetMapping
+    public List<CriaTransacaoDtoResponse> listarTransacoes(){
+        List<TransacaoEntidade> transacaoEntidades = this.transacaoService.listarTransacoes();
+        List<CriaTransacaoDtoResponse> transacoesDtoResponse = new ArrayList<>();
+        for (TransacaoEntidade transacaoEntidade : transacaoEntidades) {
+            transacoesDtoResponse.add(TransacaoMapper.criaTransacaoDtoResponse(transacaoEntidade));
+        }
+
+        return  transacoesDtoResponse;
     }
 }
