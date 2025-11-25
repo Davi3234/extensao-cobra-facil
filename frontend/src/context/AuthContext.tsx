@@ -30,10 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       refresh()
       router.push('/dashboard')
     } else {
-      notify({
-        message: response.error || 'Erro ao efetuar o login',
-        type: 'error'
-      })
+      notify({ type: 'error', message: response.error || 'Erro ao efetuar o login' })
     }
   }
 
@@ -43,10 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (response.ok) {
       router.push('/login')
     } else {
-      notify({
-        message: response.error || 'Erro ao efetuar o cadastro do usuário',
-        type: 'error'
-      })
+      notify({ type: 'error', message: response.error || 'Erro ao efetuar o cadastro do usuário' })
     }
   }
 
@@ -56,10 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (response.ok) {
       router.push('/login')
     } else {
-      notify({
-        message: response.error || 'Erro ao efetuar o logout',
-        type: 'error'
-      })
+      notify({ type: 'error', message: response.error || 'Erro ao efetuar o logout' })
     }
   }
 

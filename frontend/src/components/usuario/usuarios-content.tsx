@@ -31,25 +31,14 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
     startTransition(async () => {
       try {
         const response = await inativarUsuarioAction(id)
+
         if (response.ok) {
-          notify({
-            type: 'success',
-            title: 'Sucesso',
-            message: 'Usuário inativado com sucesso',
-          })
+          notify({ type: 'success', message: 'Usuário inativado com sucesso' })
         } else {
-          notify({
-            type: 'error',
-            title: 'Erro',
-            message: response.error || 'Erro ao inativar usuário',
-          })
+          notify({ type: 'error', message: response.error || 'Erro ao inativar usuário' })
         }
       } catch (error) {
-        notify({
-          type: 'error',
-          title: 'Erro',
-          message: 'Erro ao inativar usuário',
-        })
+        notify({ type: 'error', message: 'Erro ao inativar usuário' })
       }
     })
   }

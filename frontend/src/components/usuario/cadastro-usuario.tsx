@@ -40,27 +40,16 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
     startTransition(async () => {
       try {
         const response = await registrarUsuarioAction(data)
+
         if (response.ok) {
           reset()
-          notify({
-            type: 'success',
-            title: 'Sucesso',
-            message: 'Usuário cadastrado com sucesso',
-          })
+          notify({ type: 'success', message: 'Usuário cadastrado com sucesso' })
           onSuccess?.()
         } else {
-          notify({
-            type: 'error',
-            title: 'Erro',
-            message: response.error || 'Erro ao cadastrar usuário',
-          })
+          notify({ type: 'error', message: response.error || 'Erro ao cadastrar usuário' })
         }
       } catch (error) {
-        notify({
-          type: 'error',
-          title: 'Erro',
-          message: 'Erro ao cadastrar usuário',
-        })
+        notify({ type: 'error', message: 'Erro ao cadastrar usuário' })
       }
     })
   }
@@ -73,27 +62,16 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
     startTransition(async () => {
       try {
         const response = await updateUsuarioAction(usuario.id, data)
+
         if (response.ok) {
           reset()
-          notify({
-            type: 'success',
-            title: 'Sucesso',
-            message: 'Usuário atualizado com sucesso',
-          })
+          notify({ type: 'success', message: 'Usuário atualizado com sucesso' })
           onSuccess?.()
         } else {
-          notify({
-            type: 'error',
-            title: 'Erro',
-            message: response.error || 'Erro ao atualizar usuário',
-          })
+          notify({ type: 'error', message: response.error || 'Erro ao atualizar usuário' })
         }
       } catch (error) {
-        notify({
-          type: 'error',
-          title: 'Erro',
-          message: 'Erro ao atualizar usuário',
-        })
+        notify({ type: 'error', message: 'Erro ao atualizar usuário' })
       }
     })
   }

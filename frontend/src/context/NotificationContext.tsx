@@ -4,9 +4,9 @@ import { createContext, ReactNode, useState } from 'react'
 
 export interface NotificationType {
   id: string
-  title?: ReactNode
-  message?: ReactNode
   type?: 'info' | 'success' | 'warning' | 'error'
+  title?: ReactNode
+  message: ReactNode
 }
 
 export interface NotificationContextType {
@@ -25,7 +25,7 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
   const [notifications, setNotifications] = useState<NotificationType[]>([])
 
   const notify = (notification: Omit<NotificationType, 'id'>) => {
-    const newNotification = { ...notification, id: crypto.randomUUID() }
+    const newNotification = { ...notification, title: notification.title || getDescricaoTypeNotification(notification.type || 'info'), id: crypto.randomUUID() }
 
     setNotifications(notifications => [...notifications, newNotification])
 
@@ -41,4 +41,14 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
       {children}
     </NotificationContext.Provider>
   )
+}
+
+function getDescricaoTypeNotification(type: string) {
+  switch (type) {
+    case 'info': return 'Info'
+    case 'success': return 'Sucesso'
+    case 'warning': return 'Alerta'
+    case 'error': return 'Erro'
+  }
+  return ''
 }

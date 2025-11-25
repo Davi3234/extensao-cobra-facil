@@ -55,15 +55,16 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
     startTransition(async () => {
       try {
         const result = await cadastrarTransacaoAction(data)
+
         if (result.ok) {
           reset()
-          notify({ type: 'success', title: 'Sucesso', message: 'Transação criada' })
+          notify({ type: 'success', message: 'Transação criada' })
           onSuccess?.()
         } else {
-          notify({ type: 'error', title: 'Erro', message: result.error || 'Erro ao criar transação' })
+          notify({ type: 'error', message: result.error || 'Erro ao criar transação' })
         }
       } catch (err) {
-        notify({ type: 'error', title: 'Erro', message: 'Erro ao criar transação' })
+        notify({ type: 'error', message: 'Erro ao criar transação' })
       }
     })
   }
