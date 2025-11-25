@@ -37,17 +37,13 @@ export function CadastroTransacao({ transacao, onSuccess, disabled }: CadastroTr
     resolver: zodResolver(registrarTransacaoSchema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
-    defaultValues: transacao
-      ? {
-        valor: transacao.valor,
-        credorId: transacao.usuarioCredor.id,
-        devedorId: transacao.usuarioDevedor.id,
-        descricao: transacao.descricao || '',
-        dataVencimento: transacao.dataVencimento ? new Date(transacao.dataVencimento) : undefined
-      }
-      : {
-        valor: 0
-      }
+    defaultValues: {
+      valor: transacao?.valor || 0,
+      credorId: transacao?.usuarioCredor.id,
+      devedorId: transacao?.usuarioDevedor.id,
+      descricao: transacao?.descricao || '',
+      dataVencimento: transacao?.dataVencimento ? new Date(transacao.dataVencimento) : undefined
+    }
   })
 
   const { notify } = useContext(NotificationContext)
