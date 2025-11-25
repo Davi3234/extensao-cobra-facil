@@ -23,10 +23,10 @@ import { NotificationContext } from '@/context/NotificationContext'
 import { cadastrarTransacaoAction } from '@/lib/actions/transaction'
 import { formatPtBR } from '@/lib/date'
 import { RegistrarTransacaoData, registrarTransacaoSchema } from '@/lib/schemas/transacao'
-import { Transacao } from '@/types/models'
+import { TransacaoWithUsuario } from '@/types/models'
 
 export type CadastroTransacaoProps = {
-  transacao?: Transacao
+  transacao?: TransacaoWithUsuario
   onSuccess?: () => void
 }
 

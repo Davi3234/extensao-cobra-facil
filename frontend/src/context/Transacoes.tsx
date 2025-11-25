@@ -1,17 +1,17 @@
 'use client'
 
-import { Transacao } from '@/types/models'
+import { TransacaoWithUsuario } from '@/types/models'
 import { createContext, ReactNode, useContext, useState } from 'react'
 
 export type TransacoesContextType = {
-  transacaoSelecionada: Transacao | undefined
-  setTransacaoSelecionada: (t: Transacao | undefined) => void
+  transacaoSelecionada: TransacaoWithUsuario | undefined
+  setTransacaoSelecionada: (t: TransacaoWithUsuario | undefined) => void
 }
 
 const TransacoesContext = createContext<TransacoesContextType | undefined>(undefined)
 
 export function TransacoesProvider({ children }: { children: ReactNode }) {
-  const [transacaoSelecionada, setTransacaoSelecionada] = useState<Transacao | undefined>()
+  const [transacaoSelecionada, setTransacaoSelecionada] = useState<TransacaoWithUsuario | undefined>()
 
   return (
     <TransacoesContext.Provider value={{ transacaoSelecionada, setTransacaoSelecionada }}>

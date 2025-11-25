@@ -5,10 +5,10 @@ import { Edit } from 'lucide-react'
 import { CadastroTransacao } from '@/components/transacao/cadastro-transacao'
 import { useTransacoes } from '@/context/Transacoes'
 import { excluirTransacaoAction, quitarTransacaoAction } from '@/lib/actions/transaction'
-import { Transacao, TransacaoStatus } from '@/types/models'
+import { TransacaoStatus, TransacaoWithUsuario } from '@/types/models'
 
 export type TransacoesContentProps = {
-  transacoes: Transacao[]
+  transacoes: TransacaoWithUsuario[]
 }
 
 export default function TransacoesContent({ transacoes }: TransacoesContentProps) {

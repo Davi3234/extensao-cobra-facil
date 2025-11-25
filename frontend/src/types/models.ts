@@ -13,15 +13,23 @@ export enum TransacaoStatus {
   ATRASADA = 3,
 }
 
-export type Transacao = {
+type TransacaoBasic = {
   id: number
   valor: number
   descricao?: string
   dataVencimento: string
   dataPagamento?: string | null
+  status: TransacaoStatus
+}
+
+export type Transacao = TransacaoBasic & {
   credorId: number
   devedorId: number
-  status: TransacaoStatus
+}
+
+export type TransacaoWithUsuario = TransacaoBasic & {
+  usuarioCredor: Usuario
+  usuarioDevedor: Usuario
 }
 
 export type NotificationTransacao = {

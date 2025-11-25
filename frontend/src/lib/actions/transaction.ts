@@ -2,18 +2,18 @@
 
 import { getApi } from '@/lib/actions/api'
 import { RegistrarTransacaoData } from '@/lib/schemas/transacao'
-import { Transacao } from '@/types/models'
-import { IResult, Result } from '@/util/result'
+import { TransacaoWithUsuario } from '@/types/models'
+import { Result } from '@/util/result'
 import { revalidatePath } from 'next/cache'
 
 function revalidateTransacoes() {
   revalidatePath('/(dashboard)/transacoes')
 }
 
-export async function buscarTransacoesAction(): Promise<IResult<Transacao[]>> {
+export async function buscarTransacoesAction() {
   const request = await getApi()
 
-  const response = await request.get<Transacao[]>('/transacoes')
+  const response = await request.get<TransacaoWithUsuario[]>('/transacoes')
 
   return response
 }
@@ -21,7 +21,7 @@ export async function buscarTransacoesAction(): Promise<IResult<Transacao[]>> {
 export async function buscarTransacaoAction(id: number) {
   const request = await getApi()
 
-  const response = await request.get<Transacao>(`/transacoes/${id}`)
+  const response = await request.get<TransacaoWithUsuario>(`/transacoes/${id}`)
 
   return response
 }
