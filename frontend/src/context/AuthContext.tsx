@@ -1,67 +1,77 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { createContext } from 'react'
-
-import { useCurrentUsuario } from '@/hooks/useCurrentUsuario'
-import { useNotification } from '@/hooks/useNotification'
-import { loginAction, logoutAction, signUpAction } from '@/lib/actions/auth'
-import { LoginUsuarioData, RegistrarUsuarioData } from '@/lib/schemas/usuario'
+import { useLocalStorage } from '@/hooks/useLocalStorage'
+import { decodeToken, generateToken, validateToken } from '@/lib/jwt'
+import { UsuarioService } from '@/services/UsuarioService'
 import { Usuario } from '@/types/models'
+import { useRouter } from 'next/navigation'
+import { createContext, useEffect } from 'react'
 
 interface AuthContextType {
   usuario: Usuario | null
-  login: (data: LoginUsuarioData) => Promise<void>
-  registerUsuario: (form: RegistrarUsuarioData) => Promise<void>
-  logout: () => Promise<void>
+  login: (email: string, senha: string) => Promise<void>
+  registerUsuario: (form: Omit<Usuario, 'id' | 'ativo'>) => void
+  logout: () => void
 }
 
 export const AuthContext = createContext<AuthContextType>(null!)
+const usuarioService = new UsuarioService()
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { usuario, refresh } = useCurrentUsuario()
+  const [token, setToken] = useLocalStorage('token')
+  const [usuario, setUsuario] = useLocalStorage('usuario')
   const router = useRouter()
-  const { notify } = useNotification()
 
-  const login = async (data: LoginUsuarioData) => {
-    const response = await loginAction(data)
+  const login = async (email: string, senha: string) => {
+    const usuario = (await usuarioService.list()).find(usuario => usuario.email == email && usuario.senha == senha && usuario.ativo == 1)
 
-    if (response.ok) {
-      refresh()
-      router.push('/dashboard')
-    } else {
-      notify({
-        message: response.error || 'Erro ao efetuar o login',
-        type: 'error'
-      })
+    if (!usuario) {
+      return alert('Usuário ou senha inválidos.')
     }
+
+    const token = generateToken({ id: usuario.id })
+
+    setToken(token)
+    setUsuario(usuario)
+
+    router.push('/dashboard')
   }
 
-  const registerUsuario = async (form: RegistrarUsuarioData) => {
-    const response = await signUpAction(form)
+  const registerUsuario = (form: Omit<Usuario, 'id' | 'ativo'>) => {
+    usuarioService.create(form)
 
-    if (response.ok) {
-      router.push('/login')
-    } else {
-      notify({
-        message: response.error || 'Erro ao efetuar o cadastro do usuário',
-        type: 'error'
-      })
-    }
+    alert('Usuário cadastrado com sucesso!')
+
+    router.push('/login')
   }
 
-  const logout = async () => {
-    const response = await logoutAction()
+  const logout = () => {
+    localStorage.clear()
 
-    if (response.ok) {
-      router.push('/login')
-    } else {
-      notify({
-        message: response.error || 'Erro ao efetuar o logout',
-        type: 'error'
-      })
-    }
+    setUsuario(null)
+
+    router.push('/login')
   }
+
+  useEffect(() => {
+    if (!token) {
+      return logout()
+    }
+
+    if (!validateToken(token)) {
+      return logout()
+    }
+
+    const decoded = decodeToken(token)
+
+    usuarioService.find(decoded.id).then(usuario => {
+      if (!usuario) {
+        return logout()
+      }
+
+      setUsuario(usuario)
+    })
+  }, [token])
 
   return (
     <AuthContext.Provider value={{ usuario, login, registerUsuario, logout }}>

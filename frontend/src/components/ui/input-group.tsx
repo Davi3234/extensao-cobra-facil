@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
-function InputGroupContainer({ className, ...props }: React.ComponentProps<'div'>) {
+function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="input-group"
@@ -29,27 +29,6 @@ function InputGroupContainer({ className, ...props }: React.ComponentProps<'div'
         // Error state.
         'has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40',
 
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
-  return (
-    <div
-      data-slot="input-group"
-      role="group"
-      className={cn(
-        'group/input-group border-none dark:bg-input/30 relative flex flex-col w-full items-start gap-2 transition-[color,box-shadow] outline-none',
-        'min-w-0 has-[>textarea]:h-auto',
-
-        // Variants based on alignment.
-        'has-[>[data-align=inline-start]]:[&>input]:pl-2',
-        'has-[>[data-align=inline-end]]:[&>input]:pr-2',
-        'has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-start]]:[&>input]:pb-3',
-        'has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3',
         className
       )}
       {...props}
@@ -181,5 +160,9 @@ function InputGroupTextarea({
   )
 }
 
-export { InputGroup, InputGroupAddon, InputGroupButton, InputGroupContainer, InputGroupInput, InputGroupText, InputGroupTextarea }
+export {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea
+}
 

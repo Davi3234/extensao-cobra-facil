@@ -50,7 +50,7 @@ export function TransactionStatusCombobox({ label, value, onChange }: UsuarioCom
         </PopoverTrigger>
         <PopoverContent className='w-[300px] p-0'>
           <Command>
-            <CommandInput placeholder='Buscar situação...' />
+            <CommandInput placeholder='Search user...' />
             <CommandList>
               <CommandGroup>
                 {statusList.map(status => (

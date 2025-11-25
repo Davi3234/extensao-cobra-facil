@@ -1,7 +1,6 @@
 package com.extensao.cobra.facil.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.extensao.cobra.facil.enums.UsuarioEnum;
 import jakarta.persistence.*;
 
 @Entity(name = "tbusuario")
@@ -17,7 +16,6 @@ public class UsuarioEntidade {
     private String email;
     @Column(name = "telefone_usuario")
     private String telefone;
-    @JsonIgnore
     @Column(name = "senha_usuario")
     private String senha;
     @Column(name = "ativo_usuario")

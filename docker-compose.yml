@@ -15,6 +15,7 @@ services:
       - ./backend/.env
     environment:
       SPRING_PROFILES_ACTIVE: dev
+      SPRING_DEVTOOLS_RESTART_TRIGGERFILE: .trigger
     depends_on:
       - db
 
@@ -34,12 +35,15 @@ services:
     stdin_open: true
     tty: true
 
+
   db:
     image: postgres:16
     container_name: postgres-dev
     restart: always
-    env_file:
-      - ./backend/.env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cobrafacil
     ports:
       - "5433:5432"
     volumes:
