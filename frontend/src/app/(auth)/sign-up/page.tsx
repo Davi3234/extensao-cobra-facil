@@ -3,8 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertOctagon } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -13,29 +11,34 @@ import { Input } from '@/components/ui/input'
 import { InputGroup } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/useAuth'
-import { LoginUsuarioData, loginUsuarioSchema } from '@/lib/schemas/usuario'
+import { RegistrarUsuarioData, registrarUsuarioSchema } from '@/lib/schemas/usuario'
 
-export default function LoginPage() {
-  const { usuario, login } = useAuth()
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginUsuarioData>({
-    resolver: zodResolver(loginUsuarioSchema),
+export default function RegisterPage() {
+  const { registerUsuario } = useAuth()
+  const { register, handleSubmit, formState: { errors } } = useForm<RegistrarUsuarioData>({
+    resolver: zodResolver(registrarUsuarioSchema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
   })
 
-  const onSubmit = (data: LoginUsuarioData) => {
-    login(data)
+  const onSubmit = (data: RegistrarUsuarioData) => {
+    registerUsuario(data)
   }
-
-  useEffect(() => {
-    if (usuario) {
-      redirect('/dashboard')
-    }
-  })
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      <h1 className="text-2xl font-bold text-center">Login</h1>
+      <h1 className="text-2xl font-bold text-center">Cadastrar</h1>
+
+      <InputGroup>
+        <Label htmlFor="nome">Nome <span className='text-red-600'>*</span></Label>
+        <Input {...register('nome')} type="text" id="nome" />
+
+        {errors.nome
+          && <Alert variant="field-error">
+            <AlertOctagon />
+            <AlertDescription>{errors.nome?.message}</AlertDescription>
+          </Alert>}
+      </InputGroup>
 
       <InputGroup>
         <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
@@ -59,11 +62,21 @@ export default function LoginPage() {
           </Alert>}
       </InputGroup>
 
+      <InputGroup>
+        <Label htmlFor="telefone">Telefone</Label>
+        <Input {...register('telefone')} type="tel" id="telefone" />
 
-      <Button type="submit">Entrar</Button>
+        {errors.telefone
+          && <Alert variant="field-error">
+            <AlertOctagon />
+            <AlertDescription>{errors.telefone?.message}</AlertDescription>
+          </Alert>}
+      </InputGroup>
+
+      <Button type="submit">Cadastrar</Button>
 
       <p className="text-sm text-center">
-        Não tem conta? <Link href="/sign-up" className="text-blue-600">Cadastre-se</Link>
+        Já tem conta? <Link href="/login" className="text-blue-600">Entre</Link>
       </p>
     </form>
   )
