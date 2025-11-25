@@ -2,7 +2,13 @@ package com.extensao.cobra.facil.controller;
 
 import com.extensao.cobra.facil.dto.login.LoginDtoRequest;
 import com.extensao.cobra.facil.dto.login.LoginDtoResponse;
+import com.extensao.cobra.facil.dto.usuario.CriaUsuarioDtoRequest;
+import com.extensao.cobra.facil.dto.usuario.CriaUsuarioDtoResponse;
+import com.extensao.cobra.facil.entity.UsuarioEntidade;
+import com.extensao.cobra.facil.mapper.UsuarioMapper;
 import com.extensao.cobra.facil.security.JwtService;
+import com.extensao.cobra.facil.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +26,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtService jwtService,
@@ -30,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDtoRequest login) {
+    public ResponseEntity<LoginDtoResponse> login(@RequestBody LoginDtoRequest login) {
 
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(
@@ -43,5 +51,12 @@ public class AuthController {
         String token = jwtService.gerarToken(user);
 
         return ResponseEntity.ok(new LoginDtoResponse(token));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<CriaUsuarioDtoResponse> signUp(@RequestBody CriaUsuarioDtoRequest criaUsuarioDtoRequest) {
+        UsuarioEntidade usuarioEntidade = this.usuarioService.criarUsuario(UsuarioMapper.usuarioEntidade(criaUsuarioDtoRequest));
+
+        return ResponseEntity.ok(UsuarioMapper.criaUsuarioDtoResponse(usuarioEntidade));
     }
 }

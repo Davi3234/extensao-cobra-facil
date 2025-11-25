@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/usuarios")
@@ -30,14 +33,27 @@ public class UsuarioController {
         return ResponseEntity.ok(UsuarioMapper.criaUsuarioDtoResponse(usuarioEntidade));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CriaUsuarioDtoResponse> buscarPorId(@PathVariable Long id){
+        UsuarioEntidade usuarioEntidade = this.usuarioService.getUsuarioById(id);
+        return ResponseEntity.ok(UsuarioMapper.criaUsuarioDtoResponse(usuarioEntidade));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CriaUsuarioDtoResponse>> listar(){
+        List<UsuarioEntidade> usuarioEntidades = this.usuarioService.listarUsuarios();
+        List<CriaUsuarioDtoResponse> criaUsuarioDtoResponseList = new ArrayList<>();
+
+        for (UsuarioEntidade usuarioEntidade : usuarioEntidades) {
+            criaUsuarioDtoResponseList.add(UsuarioMapper.criaUsuarioDtoResponse(usuarioEntidade));
+        }
+
+        return ResponseEntity.ok(criaUsuarioDtoResponseList);
+    }
+
     @DeleteMapping("/{id}")
     public void inativar(@PathVariable Long id){
         this.usuarioService.inativarUsuario(id);
-    }
-
-    @GetMapping()
-    public String getMethodName() {
-        return "Hello World!";
     }
     
 }
