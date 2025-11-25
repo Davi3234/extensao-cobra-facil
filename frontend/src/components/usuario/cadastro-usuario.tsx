@@ -30,13 +30,15 @@ export function CadastroUsuario({ usuario, onSuccess, disabled }: CadastroUsuari
     resolver: zodResolver(usuario ? atualizarUsuarioSchema : registrarUsuarioSchema as any),
     mode: 'onTouched',
     reValidateMode: 'onChange',
-    values: usuario ? {
-      nome: usuario.nome,
-      email: usuario.email,
-      telefone: usuario.telefone || '',
-      senha: '',
-    } : undefined,
+    values: {
+      nome: usuario?.nome || '',
+      email: usuario?.email || '',
+      telefone: usuario?.telefone || '',
+      senha: usuario?.senha || '',
+    },
   })
+
+  console.log(usuario)
 
   const cadastrar = (data: RegistrarUsuarioData) => {
     startTransition(async () => {
