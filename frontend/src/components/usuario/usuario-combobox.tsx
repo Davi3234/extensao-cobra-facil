@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils'
 import { Usuario } from '@/types/models'
 
 export type UsuarioComboboxProps = {
-  value?: string | number
+  value?: number
   onChange?: (value: string | number) => void
 } & ComponentProps<'div'>
 
@@ -39,7 +39,7 @@ export function UsuarioCombobox({ value, onChange, className, ...props }: Usuari
     refresh()
   }, [])
 
-  const usuarioSelecionado = usuarios.find(usuario => usuario.nome === value)
+  const usuarioSelecionado = usuarios.find(usuario => usuario.id === value)
 
   return (
     <div className={cn('w-full max-w-xs space-y-2', className)} {...props}>
@@ -65,10 +65,10 @@ export function UsuarioCombobox({ value, onChange, className, ...props }: Usuari
                 {usuarios.map(usuario => (
                   <CommandItem
                     key={usuario.nome}
-                    value={usuario.nome}
-                    onSelect={currentValue => {
+                    value={`${usuario.id}`}
+                    onSelect={() => {
                       if (onChange) {
-                        onChange(currentValue === value ? '' : currentValue)
+                        onChange(usuario.id == value ? '' : usuario.id)
                       }
                       setOpen(false)
                     }}
@@ -79,7 +79,7 @@ export function UsuarioCombobox({ value, onChange, className, ...props }: Usuari
                         <span className='text-muted-foreground text-sm'>{usuario.email}</span>
                       </span>
                     </span>
-                    {value === usuario.nome && <CheckIcon size={16} className='ml-auto' />}
+                    {value == usuario.id && <CheckIcon size={16} className='ml-auto' />}
                   </CommandItem>
                 ))}
               </CommandGroup>
