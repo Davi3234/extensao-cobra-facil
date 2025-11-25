@@ -137,7 +137,7 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
           name="credorId"
           control={control}
           render={({ field }) => (<>
-            <Label htmlFor="devedorId">Credor <RequiredSymbol /></Label>
+            <Label htmlFor="credorId">Credor <RequiredSymbol /></Label>
             <UsuarioCombobox
               value={field.value as any}
               onChange={field.onChange}

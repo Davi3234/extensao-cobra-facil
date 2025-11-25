@@ -26,14 +26,14 @@ export const registrarTransacaoSchema = z.object({
 
       return dataVencimento >= now
     }, { error: 'Data de vencimento deve ser maior ou igual a data de hoje' }),
-  credorId: z.coerce.number({
-    error: issue => issue.input === undefined || isNaN(issue.input as any)
+  credorId: z.number({
+    error: issue => !issue.input || isNaN(issue.input as any)
       ? 'Credor é obrigatório'
       : 'Valor inválido'
   })
     .int(),
-  devedorId: z.coerce.number({
-    error: issue => issue.input === undefined || isNaN(issue.input as any)
+  devedorId: z.number({
+    error: issue => !issue.input || isNaN(issue.input as any)
       ? 'Devedor é obrigatório'
       : 'Valor inválido'
   })
