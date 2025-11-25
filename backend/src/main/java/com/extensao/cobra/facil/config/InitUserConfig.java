@@ -23,13 +23,13 @@ public class InitUserConfig implements CommandLineRunner {
 
             UsuarioEntidade admin = new UsuarioEntidade();
             admin.setEmail("admin@admin.com");
+            admin.setNome("Admin");
             admin.setSenha(encoder.encode("123456"));
             admin.setAtivo(1);
 
             repo.save(admin);
 
-            System.out.println("Usuário admin criado: admin@admin.com / 123456");
+            System.out.println("Usuário Admin criado: admin@admin.com / 123456");
         }
     }
 }
-
