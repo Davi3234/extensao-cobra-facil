@@ -16,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { RequiredSymbol } from '@/components/ui/required-symbol'
 import { Textarea } from '@/components/ui/textarea'
 import { Toolbar } from '@/components/ui/toolbar'
 import { UsuarioCombobox } from '@/components/usuario/usuario-combobox'
@@ -78,7 +79,7 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
       <h2 className="font-semibold">{transacao ? 'Editar Transação' : 'Nova Transação'}</h2>
 
       <InputGroup>
-        <Label htmlFor="valor">Valor (R$)<span className='text-red-600'>*</span></Label>
+        <Label htmlFor="valor">Valor (R$) <RequiredSymbol /></Label>
         <Input id="valor" {...register('valor')} disabled={isPending} />
 
         {errors.valor
@@ -136,7 +137,7 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
           name="credorId"
           control={control}
           render={({ field }) => (<>
-            <Label htmlFor="devedorId">Credor <span className='text-red-600'>*</span></Label>
+            <Label htmlFor="devedorId">Credor <RequiredSymbol /></Label>
             <UsuarioCombobox
               value={field.value as any}
               onChange={field.onChange}
@@ -156,7 +157,7 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
           name="devedorId"
           control={control}
           render={({ field }) => (<>
-            <Label htmlFor="devedorId">Devedor <span className='text-red-600'>*</span></Label>
+            <Label htmlFor="devedorId">Devedor <RequiredSymbol /></Label>
             <UsuarioCombobox
               value={field.value as any}
               onChange={field.onChange}

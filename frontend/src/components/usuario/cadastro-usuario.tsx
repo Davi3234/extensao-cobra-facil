@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { InputGroup } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
+import { RequiredSymbol } from '@/components/ui/required-symbol'
 import { Toolbar } from '@/components/ui/toolbar'
 import { NotificationContext } from '@/context/NotificationContext'
 import { registrarUsuarioAction, updateUsuarioAction } from '@/lib/actions/usuario'
@@ -81,7 +82,7 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
       <h2 className='font-semibold'>{usuario ? 'Editar Usuário' : 'Novo Usuário'}</h2>
 
       <InputGroup>
-        <Label htmlFor='nome'>Nome <span className='text-red-600'>*</span></Label>
+        <Label htmlFor='nome'>Nome <RequiredSymbol /></Label>
         <Input {...register('nome')} type='text' id='nome' disabled={isPending} />
 
         {errors.nome
@@ -92,7 +93,7 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
       </InputGroup>
 
       <InputGroup>
-        <Label htmlFor='email'>Email <span className='text-red-600'>*</span></Label>
+        <Label htmlFor='email'>Email <RequiredSymbol /></Label>
         <Input {...register('email')} type='text' id='email' disabled={isPending} />
 
         {errors.email
@@ -104,7 +105,7 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
 
       {!usuario && (
         <InputGroup>
-          <Label htmlFor='senha'>Senha <span className='text-red-600'>*</span></Label>
+          <Label htmlFor='senha'>Senha <RequiredSymbol /></Label>
           <Input {...register('senha')} type='password' id='senha' disabled={isPending} />
 
           {errors.senha

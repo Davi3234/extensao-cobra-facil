@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { InputGroup } from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
+import { RequiredSymbol } from '@/components/ui/required-symbol'
 import { useAuth } from '@/hooks/useAuth'
 import { LoginUsuarioData, loginUsuarioSchema } from '@/lib/schemas/usuario'
 
@@ -41,7 +42,7 @@ export default function LoginPage() {
       <h1 className="text-2xl font-bold text-center">Login</h1>
 
       <InputGroup>
-        <Label htmlFor="email">Email <span className='text-red-600'>*</span></Label>
+        <Label htmlFor="email">Email <RequiredSymbol /></Label>
         <Input {...register('email')} type="text" id="email" disabled={isPending} />
 
         {errors.email
@@ -52,7 +53,7 @@ export default function LoginPage() {
       </InputGroup>
 
       <InputGroup>
-        <Label htmlFor="senha">Senha <span className='text-red-600'>*</span></Label>
+        <Label htmlFor="senha">Senha <RequiredSymbol /></Label>
         <Input {...register('senha')} type="password" id="senha" disabled={isPending} />
 
         {errors.senha
