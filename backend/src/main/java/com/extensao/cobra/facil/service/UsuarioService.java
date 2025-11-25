@@ -6,10 +6,12 @@ import com.extensao.cobra.facil.exception.UsuarioJaExistenteException;
 import com.extensao.cobra.facil.exception.UsuarioNaoEncontradoException;
 import com.extensao.cobra.facil.repository.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,5 +64,11 @@ public class UsuarioService {
 
     public List<UsuarioEntidade> listarUsuarios(){
         return this.usuarioRepositorio.findAll();
+    }
+    public Optional<UsuarioEntidade> getUsuarioLogado(){
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+        return this.getUsuarioByEmail(email);
     }
 }

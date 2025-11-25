@@ -2,8 +2,8 @@ package com.extensao.cobra.facil.controller;
 
 import com.extensao.cobra.facil.dto.login.LoginDtoRequest;
 import com.extensao.cobra.facil.dto.login.LoginDtoResponse;
-import com.extensao.cobra.facil.dto.usuario.CriaUsuarioDtoRequest;
-import com.extensao.cobra.facil.dto.usuario.CriaUsuarioDtoResponse;
+import com.extensao.cobra.facil.dto.usuario.UsuarioDtoRequest;
+import com.extensao.cobra.facil.dto.usuario.UsuarioDtoResponse;
 import com.extensao.cobra.facil.entity.UsuarioEntidade;
 import com.extensao.cobra.facil.mapper.UsuarioMapper;
 import com.extensao.cobra.facil.security.JwtService;
@@ -54,8 +54,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<CriaUsuarioDtoResponse> signUp(@RequestBody CriaUsuarioDtoRequest criaUsuarioDtoRequest) {
-        UsuarioEntidade usuarioEntidade = this.usuarioService.criarUsuario(UsuarioMapper.usuarioEntidade(criaUsuarioDtoRequest));
+    public ResponseEntity<UsuarioDtoResponse> signUp(@RequestBody UsuarioDtoRequest usuarioDtoRequest) {
+        UsuarioEntidade usuarioEntidade = this.usuarioService.criarUsuario(UsuarioMapper.usuarioEntidade(usuarioDtoRequest));
 
         return ResponseEntity.ok(UsuarioMapper.criaUsuarioDtoResponse(usuarioEntidade));
     }

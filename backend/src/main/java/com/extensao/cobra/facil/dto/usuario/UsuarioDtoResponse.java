@@ -1,9 +1,10 @@
 package com.extensao.cobra.facil.dto.usuario;
 
-public record CriaUsuarioDtoRequest(
+public record UsuarioDtoResponse(
+        Long id,
         String nome,
         String email,
         String telefone,
-        String senha
+        int ativo
 ) {
 }

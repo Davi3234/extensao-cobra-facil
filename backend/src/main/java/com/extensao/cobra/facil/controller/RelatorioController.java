@@ -31,12 +31,4 @@ public class RelatorioController {
     public ResponseEntity<List<RelatorioTransacaoDtoResponse>> atrasadas() {
         return ResponseEntity.ok(relatorioService.transacoesAtrasadas());
     }
-
-    @GetMapping("/filtro")
-    public ResponseEntity<List<RelatorioTransacaoDtoResponse>> filtro(
-            @RequestParam(required = false) Integer status,
-            @RequestParam(required = false) LocalDate inicio,
-            @RequestParam(required = false) LocalDate fim) {
-        return ResponseEntity.ok(relatorioService.filtrar(status, inicio, fim));
-    }
 }
