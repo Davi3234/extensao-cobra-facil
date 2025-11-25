@@ -65,7 +65,18 @@ async function getError(response: Response) {
     const data = await response.clone().json()
 
     if (data?.error) {
+      if (data.error?.message) {
+        return data.error?.message
+      }
+      if (data.error?.mesagem) {
+        return data.error?.mesagem
+      }
+
       return data.error
+    }
+
+    if (data?.mensagem) {
+      return data?.mensagem
     }
 
     return JSON.stringify(data)
