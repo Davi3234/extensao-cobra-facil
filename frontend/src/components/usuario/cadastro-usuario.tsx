@@ -133,7 +133,7 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
           : (
             <>
               <Button type='submit' disabled={isPending} className='flex gap-2 items-center'><Save size={22} /> {isPending ? 'Atualizando...' : 'Atualizar'}</Button>
-              <Button type='button' onClick={() => { reset(); onSuccess?.() }} disabled={isPending} className='flex gap-2 items-center bg-red-700'><X size={22} /> Cancelar</Button>
+              <Button type='button' variant={'destructive'} onClick={() => { reset(); onSuccess?.() }} disabled={isPending} className='flex gap-2 items-center'><X size={22} /> Cancelar</Button>
             </>
           )
         }

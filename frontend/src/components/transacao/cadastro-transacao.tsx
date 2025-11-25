@@ -29,9 +29,10 @@ import { TransacaoWithUsuario } from '@/types/models'
 export type CadastroTransacaoProps = {
   transacao?: TransacaoWithUsuario
   onSuccess?: () => void
+  disabled?: boolean
 }
 
-export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoProps) {
+export function CadastroTransacao({ transacao, onSuccess, disabled }: CadastroTransacaoProps) {
   const { control, register, handleSubmit, getValues, formState: { errors }, reset } = useForm<RegistrarTransacaoData>({
     resolver: zodResolver(registrarTransacaoSchema),
     mode: 'onTouched',
@@ -74,13 +75,15 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
     if (!transacao) return
   }
 
+  const disableForm = isPending || disabled
+
   return (
     <form onSubmit={handleSubmit(transacao ? atualizar : cadastrar)} className="flex flex-col gap-4 bg-white p-4 rounded shadow">
       <h2 className="font-semibold">{transacao ? 'Editar Transação' : 'Nova Transação'}</h2>
 
       <InputGroup>
         <Label htmlFor="valor">Valor (R$) <RequiredSymbol /></Label>
-        <Input id="valor" {...register('valor')} disabled={isPending} />
+        <Input id="valor" {...register('valor')} disabled={disableForm} />
 
         {errors.valor
           && <Alert variant="field-error">
@@ -91,7 +94,7 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
 
       <InputGroup>
         <Label htmlFor="descricao">Descrição</Label>
-        <Textarea id="descricao" className='resize-none' {...register('descricao')} disabled={isPending} />
+        <Textarea id="descricao" className='resize-none' {...register('descricao')} disabled={disableForm} />
 
         {errors.descricao
           && <Alert variant="field-error">
@@ -109,7 +112,7 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
           render={({ field }) => (
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" data-empty={!getValues('dataVencimento')} className="text-foreground w-[280px] justify-start text-left font-normal" disabled={isPending}>
+                <Button variant="outline" data-empty={!getValues('dataVencimento')} className="text-foreground w-[280px] justify-start text-left font-normal" disabled={disableForm}>
                   <CalendarIcon />
                   {getValues('dataVencimento') ? formatPtBR(getValues('dataVencimento')!) : <span>Selecione a uma data</span>}
                 </Button>
@@ -173,8 +176,8 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
       </InputGroup>
 
       <Toolbar>
-        <Button type="submit" disabled={isPending}><Save size={22} /> {isPending ? 'Enviando...' : (transacao ? 'Atualizar' : 'Criar')}</Button>
-        {transacao && <Button type="button" onClick={() => { reset(); onSuccess?.() }} disabled={isPending}><X size={22} /> Cancelar</Button>}
+        <Button type="submit" disabled={disableForm}><Save size={22} /> {isPending ? 'Enviando...' : (transacao ? 'Atualizar' : 'Criar')}</Button>
+        {transacao && <Button type="button" onClick={() => { reset(); onSuccess?.() }} disabled={disableForm}><X size={22} /> Cancelar</Button>}
       </Toolbar>
     </form>
   )
