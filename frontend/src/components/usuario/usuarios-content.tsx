@@ -1,6 +1,7 @@
 'use client'
 
 import { Edit, ShieldOff } from 'lucide-react'
+import { startTransition, useContext } from 'react'
 
 import {
   AlertDialog,
@@ -13,6 +14,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { CadastroUsuario } from '@/components/usuario/cadastro-usuario'
+import { NotificationContext } from '@/context/NotificationContext'
 import { useUsuarios } from '@/context/Usuarios'
 import { inativarUsuarioAction } from '@/lib/actions/usuario'
 import { Usuario } from '@/types/models'
@@ -22,7 +24,35 @@ export type UsuariosContentProps = {
 }
 
 export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
+  const { notify } = useContext(NotificationContext)
   const { usuarioSelecionado, setUsuarioSelecionado } = useUsuarios()
+
+  const inativar = (id: number) => {
+    startTransition(async () => {
+      try {
+        const response = await inativarUsuarioAction(id)
+        if (response.ok) {
+          notify({
+            type: 'success',
+            title: 'Sucesso',
+            message: 'Usuário inativado com sucesso',
+          })
+        } else {
+          notify({
+            type: 'error',
+            title: 'Erro',
+            message: response.error || 'Erro ao inativar usuário',
+          })
+        }
+      } catch (error) {
+        notify({
+          type: 'error',
+          title: 'Erro',
+          message: 'Erro ao inativar usuário',
+        })
+      }
+    })
+  }
 
   return (
     <div className='grid grid-cols-2 gap-4'>
@@ -56,9 +86,7 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={async () => {
-                          await inativarUsuarioAction(usuario.id)
-                        }}>Confirmar</AlertDialogAction>
+                        <AlertDialogAction onClick={() => inativar(usuario.id)}>Confirmar</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
