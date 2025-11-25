@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label'
 import { Toolbar } from '@/components/ui/toolbar'
 import { NotificationContext } from '@/context/NotificationContext'
 import { registrarUsuarioAction, updateUsuarioAction } from '@/lib/actions/usuario'
-import { RegistrarUsuarioData, registrarUsuarioSchema } from '@/lib/schemas/usuario'
+import { atualizarUsuarioSchema, RegistrarUsuarioData, registrarUsuarioSchema } from '@/lib/schemas/usuario'
 import { Usuario } from '@/types/models'
 
 export type CadastroUsuarioPageProps = {
@@ -25,7 +25,7 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
   const { notify } = useContext(NotificationContext)
   const [isPending, startTransition] = useTransition()
   const { register, handleSubmit, formState: { errors }, reset } = useForm<RegistrarUsuarioData>({
-    resolver: zodResolver(registrarUsuarioSchema),
+    resolver: zodResolver(usuario ? atualizarUsuarioSchema : registrarUsuarioSchema as any),
     mode: 'onTouched',
     reValidateMode: 'onChange',
     values: usuario ? {
