@@ -93,27 +93,27 @@ export function CadastroTransacao({ transacao, onSuccess }: CadastroTransacaoPro
       <InputGroup>
         <Label htmlFor="dataVencimento">Data de Vencimento</Label>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" data-empty={!getValues('dataVencimento')} className="text-foreground w-[280px] justify-start text-left font-normal" disabled={isPending}>
-              <CalendarIcon />
-              {getValues('dataVencimento') ? formatPtBR(getValues('dataVencimento')!) : <span>Selecione a uma data</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent id='dataVencimento' className="w-auto p-0">
-            <Controller
-              name="dataVencimento"
-              control={control}
-              render={({ field }) => (
+        <Controller
+          name="dataVencimento"
+          control={control}
+          render={({ field }) => (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" data-empty={!getValues('dataVencimento')} className="text-foreground w-[280px] justify-start text-left font-normal" disabled={isPending}>
+                  <CalendarIcon />
+                  {getValues('dataVencimento') ? formatPtBR(getValues('dataVencimento')!) : <span>Selecione a uma data</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent id='dataVencimento' className="w-auto p-0">
                 <Calendar
                   mode="single"
                   selected={field.value}
                   onSelect={field.onChange}
                 />
-              )}
-            />
-          </PopoverContent>
-        </Popover>
+              </PopoverContent>
+            </Popover>
+          )}
+        />
 
         {errors.dataVencimento
           && <Alert variant="field-error">

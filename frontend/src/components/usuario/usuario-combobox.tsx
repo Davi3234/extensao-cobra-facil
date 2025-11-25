@@ -58,7 +58,7 @@ export function UsuarioCombobox({ value, onChange, className, ...props }: Usuari
         </PopoverTrigger>
         <PopoverContent className='w-[300px] p-0'>
           <Command>
-            <CommandInput placeholder='Search user...' />
+            <CommandInput placeholder='Buscar usuário...' />
             <CommandList>
               <CommandEmpty>Nenhum usuário encontrado.</CommandEmpty>
               <CommandGroup>
