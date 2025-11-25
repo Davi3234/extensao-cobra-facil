@@ -44,7 +44,7 @@ export async function loginAction(data: LoginUsuarioData) {
 export async function signUpAction(data: RegistrarUsuarioData) {
   const request = await getApi()
 
-  const response = await request.post('/auth/register', { body: data })
+  const response = await request.post('/auth/signup', { body: data })
 
   if (!response.ok) {
     return Result.fromResult<boolean>(response)
