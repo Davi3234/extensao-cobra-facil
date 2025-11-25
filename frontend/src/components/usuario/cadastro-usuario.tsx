@@ -20,9 +20,10 @@ import { Usuario } from '@/types/models'
 export type CadastroUsuarioPageProps = {
   usuario?: Usuario
   onSuccess?: () => void
+  disabled?: boolean
 }
 
-export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps) {
+export function CadastroUsuario({ usuario, onSuccess, disabled }: CadastroUsuarioPageProps) {
   const { notify } = useContext(NotificationContext)
   const [isPending, startTransition] = useTransition()
   const { register, handleSubmit, formState: { errors }, reset } = useForm<RegistrarUsuarioData>({
@@ -77,13 +78,15 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
     })
   }
 
+  const disabledForm = isPending || disabled
+
   return (
     <form onSubmit={handleSubmit(usuario ? atualizar : cadastrar)} className='flex flex-col gap-4 bg-white p-4 rounded shadow'>
       <h2 className='font-semibold'>{usuario ? 'Editar Usuário' : 'Novo Usuário'}</h2>
 
       <InputGroup>
         <Label htmlFor='nome'>Nome <RequiredSymbol /></Label>
-        <Input {...register('nome')} type='text' id='nome' disabled={isPending} />
+        <Input {...register('nome')} type='text' id='nome' disabled={disabledForm} />
 
         {errors.nome
           && <Alert variant='field-error'>
@@ -94,7 +97,7 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
 
       <InputGroup>
         <Label htmlFor='email'>Email <RequiredSymbol /></Label>
-        <Input {...register('email')} type='text' id='email' disabled={isPending} />
+        <Input {...register('email')} type='text' id='email' disabled={disabledForm} />
 
         {errors.email
           && <Alert variant='field-error'>
@@ -106,7 +109,7 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
       {!usuario && (
         <InputGroup>
           <Label htmlFor='senha'>Senha <RequiredSymbol /></Label>
-          <Input {...register('senha')} type='password' id='senha' disabled={isPending} />
+          <Input {...register('senha')} type='password' id='senha' disabled={disabledForm} />
 
           {errors.senha
             && <Alert variant='field-error'>
@@ -118,7 +121,7 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
 
       <InputGroup>
         <Label htmlFor='telefone'>Telefone</Label>
-        <Input {...register('telefone')} type='tel' id='telefone' disabled={isPending} />
+        <Input {...register('telefone')} type='tel' id='telefone' disabled={disabledForm} />
 
         {errors.telefone
           && <Alert variant='field-error'>
@@ -129,11 +132,11 @@ export function CadastroUsuario({ usuario, onSuccess }: CadastroUsuarioPageProps
 
       <Toolbar>
         {!usuario
-          ? <Button type='submit' disabled={isPending} className='flex gap-2 items-center'><Save size={22} /> {isPending ? 'Criando...' : 'Criar'}</Button>
+          ? <Button type='submit' disabled={disabledForm} className='flex gap-2 items-center'><Save size={22} /> {isPending ? 'Criando...' : 'Criar'}</Button>
           : (
             <>
-              <Button type='submit' disabled={isPending} className='flex gap-2 items-center'><Save size={22} /> {isPending ? 'Atualizando...' : 'Atualizar'}</Button>
-              <Button type='button' variant={'destructive'} onClick={() => { reset(); onSuccess?.() }} disabled={isPending} className='flex gap-2 items-center'><X size={22} /> Cancelar</Button>
+              <Button type='submit' disabled={disabledForm} className='flex gap-2 items-center'><Save size={22} /> {isPending ? 'Atualizando...' : 'Atualizar'}</Button>
+              <Button type='button' variant={'destructive'} onClick={() => { reset(); onSuccess?.() }} disabled={disabledForm} className='flex gap-2 items-center'><X size={22} /> Cancelar</Button>
             </>
           )
         }

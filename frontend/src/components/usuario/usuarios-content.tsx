@@ -1,7 +1,7 @@
 'use client'
 
 import { Edit, ShieldOff } from 'lucide-react'
-import { startTransition, useContext } from 'react'
+import { useContext, useTransition } from 'react'
 
 import {
   AlertDialog,
@@ -27,9 +27,10 @@ export type UsuariosContentProps = {
 export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
   const { notify } = useContext(NotificationContext)
   const { usuarioSelecionado, setUsuarioSelecionado } = useUsuarios()
+  const [isPending, setTransition] = useTransition()
 
   const inativar = (id: number) => {
-    startTransition(async () => {
+    setTransition(async () => {
       try {
         const response = await inativarUsuarioAction(id)
 
@@ -49,6 +50,7 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
       <CadastroUsuario
         usuario={usuarioSelecionado}
         onSuccess={() => setUsuarioSelecionado(undefined)}
+        disabled={isPending}
       />
 
       <div className='bg-white p-4 rounded shadow'>
@@ -70,13 +72,14 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
                     className='text-blue-600 hover:text-blue-500'
                     size={'icon'}
                     title='Editar'
+                    disabled={isPending}
                   >
                     <Edit />
                   </Button>
 
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant={'ghost'} className='text-red-600 hover:text-red-500' size={'icon'} title='Inativar'>
+                      <Button variant={'ghost'} className='text-red-600 hover:text-red-500' size={'icon'} title='Inativar' disabled={isPending}>
                         <ShieldOff />
                       </Button>
                     </AlertDialogTrigger>
@@ -86,7 +89,7 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => inativar(usuario.id)}>Confirmar</AlertDialogAction>
+                        <AlertDialogAction className='bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60' onClick={() => inativar(usuario.id)}>Inativar</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
