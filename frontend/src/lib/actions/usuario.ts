@@ -1,10 +1,11 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
+
 import { getApi } from '@/lib/actions/api'
 import { RegistrarUsuarioData } from '@/lib/schemas/usuario'
 import { Usuario } from '@/types/models'
 import { Result } from '@/util/result'
-import { revalidatePath } from 'next/cache'
 
 function revalidateUsuarios() {
   revalidatePath('/(dashboard)/usuarios')

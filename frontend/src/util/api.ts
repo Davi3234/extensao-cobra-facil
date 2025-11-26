@@ -48,7 +48,7 @@ async function internalRequest<TResponse = any>(url: string, options?: RequestAp
       return Result.error<TResponse>(await getError(response))
     }
 
-    const responseData = await response.json()
+    const responseData = await getSuccess(response)
 
     if (Result.isResult<TResponse>(responseData)) {
       return responseData
@@ -58,6 +58,22 @@ async function internalRequest<TResponse = any>(url: string, options?: RequestAp
   } catch (error: any) {
     return Result.error<TResponse>(error.message)
   }
+}
+
+async function getSuccess(response: Response) {
+  try {
+    return await response.clone().json()
+  } catch { }
+
+  try {
+    return await response.clone().text()
+  } catch { }
+
+  try {
+    return await response.clone().blob()
+  } catch { }
+
+  return null
 }
 
 async function getError(response: Response) {
