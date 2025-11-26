@@ -13,10 +13,6 @@ export function useCurrentUsuario() {
   const refresh = async () => {
     const response = await getCurrentUsuario()
 
-    if (response.ok) {
-      notify({ type: 'error', message: 'Erro ao carregar as informações do Usuário' })
-    }
-
     setUsuario(response.value)
   }
 
