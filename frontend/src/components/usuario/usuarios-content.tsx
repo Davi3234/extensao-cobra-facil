@@ -13,12 +13,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 import { CadastroUsuario } from '@/components/usuario/cadastro-usuario'
 import { NotificationContext } from '@/context/NotificationContext'
 import { useUsuarios } from '@/context/Usuarios'
 import { inativarUsuarioAction } from '@/lib/actions/usuario'
 import { Usuario } from '@/types/models'
-import { Button } from '../ui/button'
 
 export type UsuariosContentProps = {
   usuarios: Usuario[]
@@ -62,7 +62,7 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
               <div className='flex items-center justify-between p-2'>
                 <div>
                   <div className='font-medium'>{usuario.nome}</div>
-                  <div className='text-xs text-gray-500'>{usuario.email} âÿ¢ {usuario.telefone}</div>
+                  <div className='text-xs text-gray-500'>{usuario.email} â€¢ {usuario.telefone}</div>
                 </div>
 
                 <div className='flex gap-1'>
@@ -106,3 +106,4 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
     </div>
   )
 }
+
