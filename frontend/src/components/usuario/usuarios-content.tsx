@@ -27,10 +27,10 @@ export type UsuariosContentProps = {
 export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
   const { notify } = useContext(NotificationContext)
   const { usuarioSelecionado, setUsuarioSelecionado } = useUsuarios()
-  const [isPending, setTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
 
   const inativar = (id: number) => {
-    setTransition(async () => {
+    startTransition(async () => {
       try {
         const response = await inativarUsuarioAction(id)
 
@@ -62,7 +62,7 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
               <div className='flex items-center justify-between p-2'>
                 <div>
                   <div className='font-medium'>{usuario.nome}</div>
-                  <div className='text-xs text-gray-500'>{usuario.email} â€¢ {usuario.telefone}</div>
+                  <div className='text-xs text-gray-500'>{usuario.email} âÿ¢ {usuario.telefone}</div>
                 </div>
 
                 <div className='flex gap-1'>
