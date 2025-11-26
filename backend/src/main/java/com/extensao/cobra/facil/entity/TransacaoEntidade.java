@@ -26,11 +26,14 @@ public class TransacaoEntidade {
     @Column(name = "status_transacao")
     private int status;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @Column(name = "ativo_transacao")
+    private boolean ativo;
+
+    @ManyToOne
     @JoinColumn(name = "id_devedor", referencedColumnName = "id_usuario")
     private UsuarioEntidade usuarioDevedor;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_credor", referencedColumnName = "id_usuario")
     private UsuarioEntidade usuarioCredor;
 
@@ -104,5 +107,14 @@ public class TransacaoEntidade {
     public TransacaoEntidade setUsuarioCredor(UsuarioEntidade usuarioCredor) {
         this.usuarioCredor = usuarioCredor;
         return this;
+    }
+
+    public TransacaoEntidade setAtivo(boolean ativo){
+        this.ativo = ativo;
+        return this;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
     }
 }

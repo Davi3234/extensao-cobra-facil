@@ -18,40 +18,55 @@ public class RelatorioService {
 
     @Autowired
     private TransacaoRepositorio transacaoRepositorio;
+    @Autowired
+    private TransacaoService transacaoService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     public RelatorioSaldoDtoResponse calcularSaldo() {
 
-        List<TransacaoEntidade> todas = transacaoRepositorio.findAll();
+        Long idUsuario = this.usuarioService.getUsuarioLogado().get().getId();
 
-        double totalPagar = todas.stream()
-                .filter(t -> t.getValor() != null)
-                .filter(t -> t.getUsuarioDevedor() != null)
-                .mapToDouble(TransacaoEntidade::getValor)
-                .sum();
+        Double totalPagar = transacaoRepositorio.totalPagar(idUsuario);
+        if (totalPagar == null) totalPagar = 0.0;
 
-        double totalReceber = totalPagar;
+        Double totalReceber = this.transacaoRepositorio.totalReceber(idUsuario);
 
-        double saldo = totalReceber - totalPagar;
+        Double saldo = totalReceber - totalPagar;
 
         return new RelatorioSaldoDtoResponse(
                 totalReceber,
                 totalPagar,
-                saldo);
+                saldo
+        );
     }
 
     public List<RelatorioTransacaoDtoResponse> transacoesQuitadas() {
-        return transacaoRepositorio.findAll().stream()
-                .filter(transacaoEntidade -> transacaoEntidade.getStatus() == StatusTransacaoEnum.QUITADA.getValor())
+
+        Long idUsuario = this.usuarioService.getUsuarioLogado().get().getId();
+
+        List<TransacaoEntidade> quitadas =
+                transacaoRepositorio.findQuitadas(
+                        idUsuario,
+                        StatusTransacaoEnum.QUITADA.getValor()
+                );
+
+        return quitadas.stream()
                 .map(RelatorioMapper::relatorioDtoResponse)
                 .toList();
     }
 
     public List<RelatorioTransacaoDtoResponse> transacoesAtrasadas() {
-        LocalDate hoje = LocalDate.now();
 
-        return transacaoRepositorio.findAll().stream()
-                .filter(transacaoEntidade -> transacaoEntidade.getStatus() == StatusTransacaoEnum.PENDENTE.getValor())
-                .filter(transacaoEntidade -> transacaoEntidade.getDataVencimento() != null && transacaoEntidade.getDataVencimento().isBefore(hoje))
+        Long idUsuario = this.usuarioService.getUsuarioLogado().get().getId();
+
+        List<TransacaoEntidade> atrasadas =
+                transacaoRepositorio.findAtrasadas(
+                        idUsuario,
+                        StatusTransacaoEnum.PENDENTE.getValor()
+                );
+
+        return atrasadas.stream()
                 .map(RelatorioMapper::relatorioDtoResponse)
                 .toList();
     }
