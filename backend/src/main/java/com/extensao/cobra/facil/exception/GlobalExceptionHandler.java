@@ -18,9 +18,27 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsuarioJaExistenteException.class)
-    public ResponseEntity<ErrorResponse> handleUsuarioNaoEncontrado(UsuarioJaExistenteException ex) {
+    public ResponseEntity<ErrorResponse> handleUsuarioJaExistente(UsuarioJaExistenteException ex) {
         ErrorResponse response = new ErrorResponse(
                 "USR-400",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TransacaoNaoEncontradaException.class)
+    public ResponseEntity<ErrorResponse> handleTransacaoNaoEncontrada(TransacaoNaoEncontradaException ex) {
+        ErrorResponse response = new ErrorResponse(
+                "TRS-404",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsuarioOuSenhaInvalidoException.class)
+    public ResponseEntity<ErrorResponse> handleUsuarioOuSenhaInvalido(UsuarioOuSenhaInvalidoException ex) {
+        ErrorResponse response = new ErrorResponse(
+                "USR-404",
                 ex.getMessage()
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

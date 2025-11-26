@@ -45,9 +45,9 @@ public class TransacaoController {
         return ResponseEntity.ok(TransacaoMapper.criaTransacaoDtoResponse(transacaoEntidade));
     }
 
-    @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
-        this.transacaoService.excluirTransacao(id);
+    @PostMapping("/inativar/{id}")
+    public void inativar(@PathVariable Long id) {
+        this.transacaoService.inativarTransacao(id);
     }
 
     @GetMapping
@@ -59,5 +59,12 @@ public class TransacaoController {
         }
 
         return  transacoesDtoResponse;
+    }
+
+    @GetMapping("/{id}")
+    public TransacaoDtoResponse getTranscao(@PathVariable Long id){
+        TransacaoEntidade transacaoEntidade = this.transacaoService.getTransacaoById(id);
+
+        return TransacaoMapper.criaTransacaoDtoResponse(transacaoEntidade);
     }
 }
