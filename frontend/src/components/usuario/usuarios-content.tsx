@@ -18,7 +18,7 @@ import { NotificationContext } from '@/context/NotificationContext'
 import { useUsuarios } from '@/context/Usuarios'
 import { inativarUsuarioAction } from '@/lib/actions/usuario'
 import { Usuario } from '@/types/models'
-import { Button } from '../button'
+import { Button } from '../ui/button'
 
 export type UsuariosContentProps = {
   usuarios: Usuario[]
