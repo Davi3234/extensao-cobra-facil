@@ -61,8 +61,8 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
             <div key={usuario.id}>
               <div className='flex items-center justify-between p-2'>
                 <div>
-                  <div className='font-medium'>{usuario.nome}</div>
-                  <div className='text-xs text-gray-500'>{usuario.email} • {usuario.telefone}</div>
+                  <div className={`font-medium ${usuario.ativo == 0 && 'text-zinc-600'}`}>{usuario.nome} {usuario.ativo == 0 && <span>• (inativo)</span>}</div>
+                  <div className='text-xs text-gray-500'>{usuario.email} {usuario.telefone && <>• {usuario.telefone}</>}</div>
                 </div>
 
                 <div className='flex gap-1'>
@@ -77,22 +77,23 @@ export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
                     <Edit />
                   </Button>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant={'ghost'} className='text-red-600 hover:text-red-500' size={'icon'} title='Inativar' disabled={isPending}>
-                        <ShieldOff />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Deseja inativar o usuário?</AlertDialogTitle>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction className='bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60' onClick={() => inativar(usuario.id)}>Inativar</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  {usuario.ativo == 1
+                    && <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant={'ghost'} className='text-red-600 hover:text-red-500' size={'icon'} title='Inativar' disabled={isPending}>
+                          <ShieldOff />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Deseja inativar o usuário?</AlertDialogTitle>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction className='bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60' onClick={() => inativar(usuario.id)}>Inativar</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>}
                 </div>
               </div>
 

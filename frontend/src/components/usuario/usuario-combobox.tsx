@@ -75,7 +75,7 @@ export function UsuarioCombobox({ value, onChange, className, ...props }: Usuari
                   >
                     <span className='flex items-center gap-2'>
                       <span className='flex flex-col'>
-                        <span className='font-medium'>{usuario.nome}</span>
+                        <div className={`font-medium ${usuario.ativo == 0 && 'text-zinc-600'}`}>{usuario.nome} {usuario.ativo == 0 && <span>• (inativo)</span>}</div>
                         <span className='text-muted-foreground text-sm'>{usuario.email}</span>
                       </span>
                     </span>
