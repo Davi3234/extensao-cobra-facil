@@ -13,8 +13,6 @@ export function useLocalStorage<T = any>(key: string, initialValue?: T) {
 
       return item ? JSON.parse(item) : initialValue as T
     } catch (error) {
-      console.warn(`Erro ao ler a chave "${key}" do localStorage:`, error)
-
       return initialValue
     }
   })
@@ -26,9 +24,7 @@ export function useLocalStorage<T = any>(key: string, initialValue?: T) {
 
     try {
       localStorage.setItem(key, JSON.stringify(storedValue))
-    } catch (error) {
-      console.warn(`Erro ao salvar a chave "${key}" no localStorage:`, error)
-    }
+    } catch { }
   }, [key, storedValue])
 
   return [storedValue, setStoredValue] as const

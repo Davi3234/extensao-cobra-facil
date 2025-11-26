@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowRightLeft, Bell, ChartBar, ScrollText, Users } from 'lucide-react'
+import { ArrowRightLeft, ChartBar, ScrollText, Users } from 'lucide-react'
 import Link from 'next/link'
 
 export const Sidebar = () => {
@@ -8,7 +8,6 @@ export const Sidebar = () => {
     { href: '/dashboard', label: 'Visão Geral', icon: <ChartBar /> },
     { href: '/usuarios', label: 'Usuários', icon: <Users /> },
     { href: '/transacoes', label: 'Transações', icon: <ArrowRightLeft /> },
-    { href: '/notifications', label: 'Notificações', icon: <Bell /> },
     { href: '/relatorios', label: 'Relatórios', icon: <ScrollText /> },
   ]
 

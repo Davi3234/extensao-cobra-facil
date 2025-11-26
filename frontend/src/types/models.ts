@@ -13,15 +13,32 @@ export enum TransacaoStatus {
   ATRASADA = 3,
 }
 
-export type Transacao = {
+export function getDescricaoTransacaoStatus(status: TransacaoStatus) {
+  switch (status) {
+    case TransacaoStatus.PENDENTE: return 'Pendente'
+    case TransacaoStatus.QUITADA: return 'Quitada'
+    case TransacaoStatus.ATRASADA: return 'Atrasada'
+  }
+  return ''
+}
+
+type TransacaoBasic = {
   id: number
   valor: number
   descricao?: string
-  dataVencimento: string // ISO
-  dataPagamento?: string | null // ISO
-  creditorId: number
-  debtorId: number
+  dataVencimento: string
+  dataPagamento?: string | null
   status: TransacaoStatus
+}
+
+export type Transacao = TransacaoBasic & {
+  credorId: number
+  devedorId: number
+}
+
+export type TransacaoWithUsuario = TransacaoBasic & {
+  usuarioCredor: Usuario
+  usuarioDevedor: Usuario
 }
 
 export type NotificationTransacao = {

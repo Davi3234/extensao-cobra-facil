@@ -1,5 +1,8 @@
 'use client'
 
+import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
+import { ComponentProps, useEffect, useId, useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -9,39 +12,37 @@ import {
   CommandItem,
   CommandList
 } from '@/components/ui/command'
-import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { UsuarioService } from '@/services/UsuarioService'
+import { buscarUsuariosAction } from '@/lib/actions/usuario'
+import { cn } from '@/lib/utils'
 import { Usuario } from '@/types/models'
-import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
-import { ReactNode, useEffect, useId, useState } from 'react'
-
-const usuarioService = new UsuarioService()
 
 export type UsuarioComboboxProps = {
-  label?: ReactNode
-  value?: string | number
+  value?: number
   onChange?: (value: string | number) => void
-}
+} & ComponentProps<'div'>
 
-export function UsuarioCombobox({ label, value, onChange }: UsuarioComboboxProps) {
+export function UsuarioCombobox({ value, onChange, className, ...props }: UsuarioComboboxProps) {
   const id = useId()
   const [usuarios, setUsuarios] = useState<Usuario[]>([])
   const [open, setOpen] = useState(false)
 
   const refresh = () => {
-    usuarioService.list().then(usuarios => setUsuarios(usuarios))
+    buscarUsuariosAction().then(response => {
+      if (response.ok) {
+        setUsuarios(response.value)
+      }
+    })
   }
 
   useEffect(() => {
     refresh()
   }, [])
 
-  const usuarioSelecionado = usuarios.find(usuario => usuario.nome === value)
+  const usuarioSelecionado = usuarios.find(usuario => usuario.id === value)
 
   return (
-    <div className='w-full max-w-xs space-y-2'>
-      <Label htmlFor={id}>{label}</Label>
+    <div className={cn('w-full max-w-xs space-y-2', className)} {...props}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button id={id} variant='outline' role='combobox' aria-expanded={open} className='w-full justify-between'>
@@ -57,17 +58,17 @@ export function UsuarioCombobox({ label, value, onChange }: UsuarioComboboxProps
         </PopoverTrigger>
         <PopoverContent className='w-[300px] p-0'>
           <Command>
-            <CommandInput placeholder='Search user...' />
+            <CommandInput placeholder='Buscar usuário...' />
             <CommandList>
               <CommandEmpty>Nenhum usuário encontrado.</CommandEmpty>
               <CommandGroup>
                 {usuarios.map(usuario => (
                   <CommandItem
                     key={usuario.nome}
-                    value={usuario.nome}
-                    onSelect={currentValue => {
+                    value={`${usuario.id}`}
+                    onSelect={() => {
                       if (onChange) {
-                        onChange(currentValue === value ? '' : currentValue)
+                        onChange(usuario.id == value ? '' : usuario.id)
                       }
                       setOpen(false)
                     }}
@@ -78,7 +79,7 @@ export function UsuarioCombobox({ label, value, onChange }: UsuarioComboboxProps
                         <span className='text-muted-foreground text-sm'>{usuario.email}</span>
                       </span>
                     </span>
-                    {value === usuario.nome && <CheckIcon size={16} className='ml-auto' />}
+                    {value == usuario.id && <CheckIcon size={16} className='ml-auto' />}
                   </CommandItem>
                 ))}
               </CommandGroup>
