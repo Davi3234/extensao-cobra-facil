@@ -38,8 +38,6 @@ export function CadastroUsuario({ usuario, onSuccess, disabled }: CadastroUsuari
     },
   })
 
-  console.log(usuario)
-
   const cadastrar = (data: RegistrarUsuarioData) => {
     startTransition(async () => {
       try {

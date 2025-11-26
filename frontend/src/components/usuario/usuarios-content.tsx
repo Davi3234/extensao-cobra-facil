@@ -27,10 +27,10 @@ export type UsuariosContentProps = {
 export default function UsuariosContent({ usuarios }: UsuariosContentProps) {
   const { notify } = useContext(NotificationContext)
   const { usuarioSelecionado, setUsuarioSelecionado } = useUsuarios()
-  const [isPending, setTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
 
   const inativar = (id: number) => {
-    setTransition(async () => {
+    startTransition(async () => {
       try {
         const response = await inativarUsuarioAction(id)
 

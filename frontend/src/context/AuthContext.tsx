@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { createContext } from 'react'
+import { createContext, useEffect } from 'react'
 
 import { useCurrentUsuario } from '@/hooks/useCurrentUsuario'
 import { useNotification } from '@/hooks/useNotification'
@@ -27,8 +27,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const response = await loginAction(data)
 
     if (response.ok) {
-      refresh()
-      router.push('/dashboard')
+      notify({ type: 'success', message: 'Login efetuado com sucesso' })
+      await refresh()
     } else {
       notify({ type: 'error', message: response.error || 'Erro ao efetuar o login' })
     }
@@ -48,11 +48,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const response = await logoutAction()
 
     if (response.ok) {
+      await refresh()
       router.push('/login')
     } else {
       notify({ type: 'error', message: response.error || 'Erro ao efetuar o logout' })
     }
   }
+
+  useEffect(() => {
+    if (usuario) {
+      router.push('/dashboard')
+    }
+  }, [usuario])
 
   return (
     <AuthContext.Provider value={{ usuario, login, registerUsuario, logout }}>

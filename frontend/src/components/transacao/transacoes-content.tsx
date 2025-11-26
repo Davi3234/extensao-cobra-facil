@@ -66,8 +66,6 @@ export default function TransacoesContent({ transacoes, disabled }: TransacoesCo
 
   const disabledContent = isPending || disabled
 
-  console.log(transacoes)
-
   return (
     <div className='grid grid-cols-2 gap-4'>
       <CadastroTransacao transacao={transacaoSelecionada} onSuccess={() => setTransacaoSelecionada(undefined)} disabled={isPending} />
