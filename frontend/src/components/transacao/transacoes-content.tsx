@@ -3,6 +3,7 @@
 import { HandCoins, Trash } from 'lucide-react'
 import { useTransition } from 'react'
 
+import { Button } from '@/components/button'
 import { CadastroTransacao } from '@/components/transacao/cadastro-transacao'
 import {
   AlertDialog,
@@ -14,7 +15,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
 import { useTransacoes } from '@/context/Transacoes'
 import { useCurrentUsuario } from '@/hooks/useCurrentUsuario'
 import { useNotification } from '@/hooks/useNotification'

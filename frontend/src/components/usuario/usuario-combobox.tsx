@@ -3,7 +3,7 @@
 import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
 import { ComponentProps, useEffect, useId, useState } from 'react'
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/button'
 import {
   Command,
   CommandEmpty,
