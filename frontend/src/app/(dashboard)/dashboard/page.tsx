@@ -40,7 +40,7 @@ export default async function DashboardPage() {
 
         <Card
           label='Saldo Geral'
-          subtext={`${saldo.saldoGeral}`}
+          subtext={`R$ ${saldo.saldoGeral.toFixed(2)}`}
           icon={<ArrowRightLeft size={32} className='my-auto' />}
         />
       </div>

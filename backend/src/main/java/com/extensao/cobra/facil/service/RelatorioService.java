@@ -19,8 +19,6 @@ public class RelatorioService {
     @Autowired
     private TransacaoRepositorio transacaoRepositorio;
     @Autowired
-    private TransacaoService transacaoService;
-    @Autowired
     private UsuarioService usuarioService;
 
     public RelatorioSaldoDtoResponse calcularSaldo() {
@@ -28,9 +26,10 @@ public class RelatorioService {
         Long idUsuario = this.usuarioService.getUsuarioLogado().get().getId();
 
         Double totalPagar = transacaoRepositorio.totalPagar(idUsuario);
-        if (totalPagar == null) totalPagar = 0.0;
+        totalPagar = totalPagar == null ? 0.0 : totalPagar;
 
         Double totalReceber = this.transacaoRepositorio.totalReceber(idUsuario);
+        totalReceber = totalReceber == null ? 0.0 : totalReceber;
 
         Double saldo = totalReceber - totalPagar;
 

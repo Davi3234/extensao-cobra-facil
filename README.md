@@ -13,7 +13,7 @@ git clone https://github.com/Davi3234/extensao-cobra-facil.git
 3. Na pasta raíz do projeto, rode o comando para levantar os serviços do Banco PostgreSQL, Backend com Spring Boot e Frontend com NextJS:
 
 ```bash
-docker compose up -d
+docker compose up --build -d
 ```
 
-4. No navegador acesse http://localhost:3000 para acessar o sistema.
+8. No navegador acesse http://localhost:3000 para acessar o sistema.
