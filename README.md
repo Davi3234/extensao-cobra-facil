@@ -16,4 +16,4 @@ git clone https://github.com/Davi3234/extensao-cobra-facil.git
 docker compose up --build -d
 ```
 
-8. No navegador acesse http://localhost:3000 para acessar o sistema.
+4. No navegador acesse http://localhost:3000 para acessar o sistema.
